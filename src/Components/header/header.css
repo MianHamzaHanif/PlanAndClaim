@@ -1,0 +1,138 @@
+.homepageheader {
+  background-color: transparent;
+  backdrop-filter: blur(5px);
+  padding: 5px 30px;
+}
+
+.homepageheader .buttonGroup {
+  display: flex;
+  align-items: center;
+}
+
+.main-header .logo img {
+  width: 50px;
+}
+
+.homepageheader ul.navbar-nav {
+  gap: 20px;
+}
+
+.homepageheader ul.navbar-nav li a {
+  align-items: center;
+  font-family: "Orbitron", sans-serif;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 16px;
+  font-weight: 500;
+  gap: 4px;
+  line-height: 1;
+  line-height: 18px;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  color: #fff;
+}
+
+.buttonGroup button.btn1 {
+  background-color: #FF8908;
+  border: none;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-family: "Orbitron", sans-serif;
+  margin-right: 10px;
+}
+
+.buttonGroup .dropdown button {
+  background-color: transparent;
+  border: none;
+  font-family: "Orbitron", sans-serif;
+}
+
+.navbar-nav .dropdown-menu {
+  position: static;
+  background: #000;
+}
+
+.dropdown-item:focus,
+.dropdown-item:hover {
+  color: #000 !important;
+}
+
+.dropdown-menu[data-bs-popper] {
+  min-width: 50px !important;
+  top: 100%;
+  left: 0;
+}
+
+.homepageheader .navbar-nav .dropdown .dropdown-menu .dropdown-item {
+  padding: 15px 20px;
+}
+
+.homepageheader .navbar-nav .dropdown .dropdown-menu .dropdown-item:hover {
+  background: #212529a8;
+  color: #FF8908 !important;
+}
+
+.navbar-brand {
+  width: 40px;
+}
+
+@media (min-width: 320px) and (max-width: 767px) {
+  .homepageheader {
+    padding: 5px 10px;
+  }
+
+  .homepageheader .buttonGroup button.btn1 {
+    padding: 10px 10px;
+    font-size: 13px;
+  }
+
+  .homepageheader ul.navbar-nav {
+    gap: 10px;
+    padding: 10px 15px;
+  }
+
+  .homepageheader .buttonGroup {
+    display: block;
+    align-items: center;
+    padding-left: 10px;
+  }
+
+
+  .navbar-collapse {
+    background-color: #000;
+    padding: 10px 0;
+    height: 400px;
+    overflow-y: scroll;
+    height: 400px;
+    overflow-y: scroll;
+  }
+
+  .navbar-brand {
+    width: 40px;
+  }
+
+}
+
+@media (min-width: 768px) and (max-width: 1200px) {
+  .homepageheader ul.navbar-nav {
+    gap: 15px;
+  }
+
+  .homepageheader ul.navbar-nav li a {
+    font-size: 12px;
+  }
+
+  .homepageheader {
+    background-color: transparent;
+    backdrop-filter: blur(5px);
+    padding: 5px 10px;
+  }
+
+  .buttonGroup button.btn1 {
+    font-size: 14px;
+    padding: 10px;
+  }
+}

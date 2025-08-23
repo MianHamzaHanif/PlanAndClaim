@@ -1,0 +1,136 @@
+.Invite {
+    margin-top: 100px;
+    padding: 0 50px;
+}
+
+.Invite h2 {
+    color: #fff;
+    font-family: "Orbitron", sans-serif;
+    font-size: 2.25rem;
+    font-weight: 600;
+    margin-bottom: 50px;
+}
+
+.referral-input {
+  color: #fff;            /* text white */
+  background-color: #222; /* optional: dark bg to contrast */
+}
+
+.Invite h3 {
+    color: #fff;
+    font-family: "Orbitron", sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.Invite input {
+    width: 65%;
+    background-color: transparent;
+    height: 50px;
+    font-family: "Orbitron", sans-serif;
+}
+
+.Invite input::placeholder {
+    color: #7B7B7B;
+    font-size: 14px;
+}
+
+.Invite button.btn {
+    background-color: #FF8908;
+    border: none;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: "Orbitron", sans-serif;
+    margin-right: 10px;
+}
+
+.Invite .card {
+    background-color: #161616;
+    width: 100%;
+    margin: 0 auto 50px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #7B7B7B;
+}
+
+.Invite .card h4 {
+    color: #fff;
+    font-family: "Orbitron", sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.Invite .card p {
+    color: #FF8908;
+    font-family: "Orbitron", sans-serif;
+    font-size: 40px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.tooltips {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.tooltips .tooltip-text {
+    visibility: hidden;
+    position: absolute;
+    background: #333;
+    color: #fff;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    bottom: -100px;
+    left: -70px;
+    transform: translateX(-50%);
+    width: 500px;
+    white-space: normal;
+    word-wrap: break-word;
+    line-height: 20px;
+}
+
+.tooltips:hover .tooltip-text {
+    visibility: visible;
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+    .Invite {
+        padding: 0;
+    }
+
+    .Invite input {
+        width: 100%;
+        background-color: transparent;
+        height: 50px;
+        font-family: "Orbitron", sans-serif;
+        margin-bottom: 10px;
+    }
+
+    .Invite .card h4 {
+        color: #fff;
+        font-family: "Orbitron", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .tooltips .tooltip-text {
+        visibility: hidden;
+        position: absolute;
+        background: #333;
+        color: #fff;
+        padding: 5px 8px;
+        border-radius: 4px;
+        font-size: 10px;
+        bottom: -150px;
+        left: 30px;
+        transform: translateX(-50%);
+        width: 281px;
+        white-space: normal;
+        word-wrap: break-word;
+        line-height: 20px;
+    }
+}

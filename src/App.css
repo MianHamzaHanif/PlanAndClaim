@@ -1,0 +1,37 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: black;
+    overflow-x: hidden;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(128, 128, 128, .6) transparent;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px
+}
+
+::-webkit-scrollbar-track {
+    background: transparent
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(128, 128, 128, .6);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    border-radius: 9999px
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(128, 128, 128, .7);
+    border: 2px solid transparent;
+    background-clip: padding-box
+}

@@ -1,0 +1,184 @@
+.DAOPage {
+    padding-top: 110px;
+}
+
+.DAOPage.ResonancePage .Heading {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+    font-weight: 700;
+    color: #fff;
+    font-family: orbitron, orbitron Fallback;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.DAOPage.ResonancePage .Heading2 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 700;
+    color: #fff;
+    font-family: orbitron, orbitron Fallback;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 25px;
+}
+
+.DAOPage.ResonancePage .Heading2 span {
+    font-size: 3rem;
+    line-height: 1;
+    color: #ff8908;
+}
+
+.DAOPage.ResonancePage .Heading span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.DAOPage.ResonancePage .Heading span i {
+    font-size: 1.25rem;
+    color: #7b7b7b;
+}
+
+.DAOPage.ResonancePage .card {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+    border-width: 1px;
+    border-color: rgb(62 67 71);
+    border-radius: .75rem;
+    background: rgb(22 22 22);
+}
+
+.DAOPage.ResonancePage .card .card-heading {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+    color: white;
+    font-weight: 600;
+    font-family: orbitron, orbitron Fallback;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.DAOPage.ResonancePage .card .amount {
+    font-size: 3rem;
+    line-height: 1;
+    color: rgb(255 137 8);
+    font-weight: 400;
+    font-family: orbitron, orbitron Fallback;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.DAOPage.ResonancePage .card .btn {
+    background: #FF8908;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    padding-left: 70px;
+    padding-right: 70px;
+    height: 45px;
+    display: flex;
+    font-family: orbitron, orbitron Fallback;
+    color: white;
+    border-radius: .375rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.DAOPage.ResonancePage .card .btn:hover {
+    background: rgb(255 137 8 / 80%);
+}
+
+.DAOPage.ResonancePage .card .card-left-heading {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    color: white;
+    font-weight: 500;
+    font-family: orbitron, orbitron Fallback;
+
+}
+
+.DAOPage.ResonancePage .card .right_amount {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    color: rgb(255 137 8);
+    font-weight: 500;
+    font-family: orbitron, orbitron Fallback;
+}
+
+.DAOPage.ResonancePage .card .card-Heding {
+    font-weight: 500;
+    font-family: orbitron, orbitron Fallback;
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+.DAOPage.ResonancePage table {
+    border-collapse: collapse;
+    width: 100%;
+    background-color: #1a1c1f;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.DAOPage.ResonancePage table thead tr th.custom-bg {
+    background-color: #000 !important;
+}
+
+.DAOPage.ResonancePage table thead tr th {
+    background-color: #33383d !important;
+    color: #fff !important;
+    padding: 15px !important;
+    text-align: left;
+    font-weight: 400;
+    font-size: 15px;
+    font-family: "Orbitron", sans-serif;
+    text-align: center;
+    white-space: nowrap;
+}
+
+
+.DAOPage.ResonancePage table tbody tr td {
+    background-color: #1a1c1f !important;
+    text-align: center;
+    padding: 20px !important;
+    font-size: 18px;
+    color: #FF8908 !important;
+    border: none;
+    font-family: "Orbitron", sans-serif;
+}
+
+@media (min-width: 320px) and (max-width: 575.99px) {
+    .DAOPage.ResonancePage .Heading {
+        font-size: 1.75rem;
+    }
+
+    .DAOPage.ResonancePage .card .card-heading {
+        font-size: 1.35rem;
+    }
+
+    .DAOPage.ResonancePage .card .amount {
+        font-size: 2.5rem;
+    }
+
+    .DAOPage.ResonancePage .card .btn {
+        padding-left: 50px;
+        padding-right: 50px;
+        font-size: 1.15rem;
+    }
+
+    .DAOPage.ResonancePage .card .card-left-heading {
+        font-size: 0.95rem;
+    }
+
+    .DAOPage.ResonancePage .card .right_amount {
+        font-size: 0.95rem;
+    }
+
+    .DAOPage.ResonancePage .card {
+        padding-top: 2.5rem;
+        padding-bottom: 2.5rem;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 768.99px) {}

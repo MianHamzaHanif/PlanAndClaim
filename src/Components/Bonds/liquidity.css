@@ -1,0 +1,335 @@
+.LiquidityBonds {
+    padding-top: 110px;
+}
+
+.LiquidityBonds .heading {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+    font-weight: 700;
+    color: #fff;
+    font-family: orbitron, orbitron Fallback;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.LiquidityBonds .heading span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.LiquidityBonds .heading span i {
+    font-size: 1.25rem;
+    color: #7b7b7b;
+}
+
+.LiquidityBonds .graphcard {
+    background: rgb(42 42 42);
+    border-width: 0;
+}
+
+.LiquidityBonds .graphcard .card-heading {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    color: #ff8908;
+    font-weight: 500;
+}
+
+.LiquidityBonds .graphcard .card-amount {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    color: #fff;
+    font-weight: 500;
+    text-align: end;
+    margin-top: 15px;
+}
+
+
+
+
+
+#custom-tab {
+    margin-top: 100px;
+}
+
+#custom-tab ul.nav-tabs {
+    border: none;
+}
+
+#custom-tab ul.nav-tabs li {
+    margin-right: 10px;
+    width: 20%;
+}
+
+#custom-tab ul.nav-tabs li button.active {
+    background-color: #FF8908;
+    border: none;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: "Orbitron", sans-serif;
+}
+
+#custom-tab ul.nav-tabs li button {
+    border: 1px solid #FF8908;
+    width: 100%;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: "Orbitron", sans-serif;
+}
+
+#custom-tab .tab-content {
+    margin-top: 30px;
+}
+
+#custom-tab .card {
+    background-color: #161616;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#custom-tab .card .custom-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#custom-tab .card .custom-flex h2 {
+    font-family: "Orbitron", sans-serif;
+    font-size: 16px;
+    color: #fff;
+    font-weight: 100;
+}
+
+#custom-tab .card .custom-flex h2 span {
+    color: #FF8908;
+    font-size: 24px;
+}
+
+#custom-tab .card .input-group input {
+    background-color: transparent;
+    height: 50px;
+    font-family: "Orbitron", sans-serif;
+    border-right: 1px solid #161616;
+}
+
+#custom-tab .card .input-group input::placeholder {
+    color: #7B7B7B;
+}
+
+#custom-tab .card .input-group .input-group-text {
+    background-color: transparent;
+    color: #fff;
+    font-weight: 500;
+    font-size: 20px;
+    font-family: "Orbitron", sans-serif;
+}
+
+#custom-tab .card button.wallet-btn {
+    background-color: #FF8908;
+    border: none;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: "Orbitron", sans-serif;
+    width: 30%;
+    margin: 0 auto;
+}
+
+#custom-tab .card ul.list-flex {
+    margin-top: 10px;
+    padding: 0;
+}
+
+#custom-tab .card ul.list-flex li {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 40px;
+}
+
+#custom-tab .card ul.list-flex li h6 {
+    color: #7B7B7B;
+    font-family: "Orbitron", sans-serif;
+    font-size: 18px;
+    font-weight: 100;
+}
+
+#custom-tab .card ul.list-flex li p {
+    color: #fff;
+    font-family: "Orbitron", sans-serif;
+    font-size: 18px;
+    font-weight: 100;
+}
+
+button.claim-btn {
+    background-color: #FF8908;
+    border: none;
+    color: #fff;
+    padding: 0px 15px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: "Orbitron", sans-serif;
+    opacity: .5;
+}
+
+#transaction {
+    padding: 40px 0;
+}
+
+#transaction .head {
+    margin-bottom: 40px;
+}
+
+#transaction .head h2 {
+    color: #fff;
+    font-family: "Orbitron", sans-serif;
+    font-size: 2.25rem;
+}
+
+#transaction table {
+    border-collapse: collapse;
+    width: 100%;
+    background-color: #1a1c1f;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+#transaction table thead tr.custom-none {
+    display: none;
+}
+
+#transaction table thead tr th.custom-bg {
+    background-color: #000 !important;
+}
+
+#transaction table thead tr th {
+    background-color: #33383d !important;
+    color: #fff !important;
+    padding: 15px !important;
+    text-align: left;
+    font-size: 18px;
+    font-family: "Orbitron", sans-serif;
+    text-align: center;
+    white-space: nowrap;
+}
+
+
+#transaction table tbody tr td {
+    background-color: #1a1c1f !important;
+    text-align: center;
+    padding: 20px !important;
+    font-size: 18px;
+    color: #FF8908 !important;
+    border: none;
+    font-family: "Orbitron", sans-serif;
+}
+
+/* Comeson Page css Start */
+.LiquidityBonds.ComesonPage {
+    background-image: url(../../../public/Dashboardimg/Comesonbg.svg);
+    background-repeat: no-repeat;
+    background-size: fill;
+    height: 100vh;
+    padding-top: 110px;
+    padding-bottom: 400px;
+}
+
+.LiquidityBonds.ComesonPage .subheading {
+    margin-top: 50px;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    text-align: center;
+    color: white;
+    font-weight: 600;
+    font-family: orbitron, orbitron Fallback;
+    margin-bottom: 15px;
+}
+
+.LiquidityBonds.ComesonPage .Heading {
+    font-size: 6rem;
+    line-height: 1;
+    text-align: center;
+    color: white;
+    font-weight: 700;
+    font-family: orbitron, orbitron Fallback;
+    margin-bottom: 15px;
+    letter-spacing: 19.2px;
+}
+
+/* Comeson Page css End */
+
+
+@media (min-width: 320px) and (max-width: 480px) {
+
+    #transaction table {
+        border-collapse: collapse;
+        width: 100%;
+        background-color: #1a1c1f;
+        border-radius: 20px;
+        overflow: hidden;
+        min-width: 600px;
+        /* Prevents squishing columns too much */
+    }
+
+    #custom-tab ul.nav-tabs li {
+        margin-right: 10px;
+        width: 45%;
+    }
+
+    #transaction .head h2 {
+        color: #fff;
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.25rem;
+    }
+
+    #custom-tab .card {
+        background-color: #161616;
+        width: 100%;
+        margin: 0 auto;
+        padding: 10px;
+    }
+
+    #custom-tab .card .custom-flex h2 span {
+        color: #FF8908;
+        font-size: 16px;
+    }
+
+    #custom-tab .card .custom-flex h2 {
+        font-size: 14px;
+    }
+
+    #custom-tab .card button.wallet-btn {
+        width: 100%;
+    }
+
+    #custom-tab .card ul.list-flex li h6 {
+        font-size: 14px;
+    }
+
+    #custom-tab .card ul.list-flex li p {
+        font-size: 14px;
+    }
+
+    #custom-tab .card ul.list-flex li {
+        line-height: 20px;
+    }
+
+    .LiquidityBonds.ComesonPage .subheading {
+        font-size: 0.8rem;
+    }
+
+    .LiquidityBonds.ComesonPage .Heading {
+        font-size: 2.4rem;
+        line-height: 2;
+    }
+
+}

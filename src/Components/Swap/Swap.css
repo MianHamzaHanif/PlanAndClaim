@@ -1,0 +1,107 @@
+.Swap {
+    margin-top: 100px;
+    padding: 0 50px;
+}
+
+.Swap h2 {
+    color: #fff;
+    font-family: "Orbitron", sans-serif;
+    font-size: 2.25rem;
+    font-weight: 600;
+    margin-bottom: 50px;
+}
+
+.Swap .card {
+    background-color: #161616;
+    width: 50%;
+    margin: 0 auto 20px;
+    padding: 20px 20px 0 20px;
+    border-radius: 10px;
+    border: 1px solid #7B7B7B;
+    text-align: center;
+}
+
+.Swap .card p {
+    color: #fff;
+    font-family: "Orbitron", sans-serif;
+}
+
+.Swap .card h5 {
+    color: #fff;
+    font-family: "Orbitron", sans-serif;
+}
+
+.Swap .card .custom-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.Swap .card .custom-flex2 {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.Swap .card .custom-flex2 span {
+    color: #7B7B7B;
+    font-family: "Orbitron", sans-serif;
+}
+
+.Swap .card .custom-flex2 input {
+    background-color: #404040;
+    font-family: "Orbitron", sans-serif;
+    border: none;
+    padding: 0 10px;
+    width: 25%;
+    border-radius: 6px;
+    margin: 0 10px;
+}
+
+.Swap .card .des {
+    font-family: "Orbitron", sans-serif;
+    color: #fff;
+    padding: 40px 0 20px;
+}
+
+.Swap .card .des p {
+    color: #7aa3a1;
+    font-size: 14px;
+}
+
+.Swap .card .des button {
+    background-color: #FF8908;
+    border: none;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: "Orbitron", sans-serif;
+    margin-top: 20px;
+}
+
+.Swap .card .des .p2 {
+    padding-top: 50px;
+    font-size: 12px;
+    margin: 0;
+}
+
+@media (min-width: 320px) and (max-width: 575.99px) {
+    .Swap {
+        margin-top: 100px;
+        padding: 0;
+    }
+
+    .Swap .card {
+        width: 100%;
+    }
+
+    .Swap .card .des h5 {
+        font-size: 16px;
+    }
+
+    .Swap .card .des p {
+        color: #7aa3a1;
+        font-size: 12px;
+    }
+}

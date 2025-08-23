@@ -1,0 +1,349 @@
+#bg {
+    background-image: url('../../../public/Websiteimg/main-bg.png');
+    background-position: top;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#banner {
+    padding: 200px 0;
+}
+
+#banner .banner-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    margin-top: 200px;
+}
+
+#banner .banner-content img.cloud1 {
+    width: 50%;
+    animation: page_moveLeftRight__WUTOy 13s ease-in-out infinite;
+    left: 100px;
+    position: absolute;
+    top: 100px;
+}
+
+#banner .banner-content img.cloud2 {
+    width: 50%;
+    animation: page_moveRightLeft__liwkU 15s ease-in-out infinite;
+    margin-left: 100px;
+}
+
+@keyframes page_moveLeftRight__WUTOy {
+    0% {
+        transform: translateX(0)
+    }
+
+    50% {
+        transform: translateX(300px)
+    }
+
+    to {
+        transform: translateX(0)
+    }
+}
+
+@keyframes page_moveRightLeft__liwkU {
+    0% {
+        transform: translateX(0)
+    }
+
+    50% {
+        transform: translateX(-300px)
+    }
+
+    to {
+        transform: translateX(0)
+    }
+}
+
+#banner .banner-content img {
+    width: 50%;
+    margin-right: 26px;
+}
+
+#banner .banner-content h2 {
+    font-family: "Orbitron", sans-serif;
+    color: #fff;
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+#banner .banner-content h3 {
+    background-image: linear-gradient(90deg, #00A8FC, rgba(0, 168, 252, 0) 56.73%);
+    color: #fff;
+    padding-left: 65px;
+    font-size: 40px;
+    border-radius: 10px;
+    height: 80px;
+    line-height: 80px;
+    font-family: "Orbitron", sans-serif;
+}
+
+#banner .banner-content h4 {
+    color: #fff;
+    padding-left: 65px;
+    font-size: 40px;
+    border-radius: 10px;
+    height: 80px;
+    font-family: "Orbitron", sans-serif;
+}
+
+#about {
+    padding: 150px 0;
+}
+
+#about .des {
+    margin-bottom: 40px;
+}
+
+#about .des p {
+    color: #fff;
+    font-family: "Orbitron", sans-serif;
+    line-height: 40px;
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+#user-value {
+    padding: 300px 0;
+}
+
+#user-value .heading {
+    text-align: center;
+    margin-bottom: 100px;
+}
+
+#user-value .heading h2 {
+    font-family: "Orbitron", sans-serif;
+    color: #fff;
+    font-size: 65px;
+}
+
+#user-value .heading h2 span {
+    font-size: 48px;
+    color: #FF8908;
+    margin-right: 40px;
+}
+
+#user-value .user-box {
+    background-image: linear-gradient(90deg, rgba(0, 168, 252, 0) 30%, #00A8FC);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 40px;
+}
+
+#user-value .user-box h3 {
+    color: #fff;
+    font-size: 48px;
+    font-family: "Orbitron", sans-serif;
+    font-weight: 500;
+}
+
+#user-value .user-box h3 span {
+    color: #FF8908;
+    margin-right: 1rem;
+}
+
+#user-value .user-box p {
+    color: #fff;
+    font-family: "Orbitron", sans-serif;
+    font-size: 20px;
+}
+
+#user-des {
+    padding: 250px 0;
+}
+
+#user-des .des {
+    background-image: url('../../../public/Websiteimg/user-bg.png');
+    background-size: 100%;
+    background-repeat: no-repeat;
+    padding: 27px;
+    background-position: center;
+    border-radius: 20px;
+
+}
+
+#user-des .des p {
+    font-size: 16px;
+    color: #fff;
+    font-family: "Orbitron", sans-serif;
+    border-radius: 20px;
+}
+
+#cta {
+    padding: 250px 0;
+}
+
+#cta .des {
+    text-align: center;
+}
+
+#cta .des h2 {
+    font-size: 41px;
+    color: #fff;
+    font-family: "Orbitron", sans-serif;
+}
+
+#cta .des p {
+    color: #fff;
+    font-family: "Orbitron", sans-serif;
+    font-size: 24px;
+    width: 60%;
+    margin: 40px auto;
+}
+
+#cta button {
+    background-color: #FF8908;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 15px 25px;
+    font-size: 20px;
+    font-family: "Orbitron", sans-serif;
+    font-weight: 500;
+
+}
+
+@media (min-width: 320px) and (max-width: 767px) {
+
+    #banner .banner-content img {
+        width: 40%;
+        margin-right: 26px;
+    }
+
+    #banner .banner-content {
+        margin-top: 0;
+    }
+
+    #banner .banner-content img.cloud1 {
+        width: 100%;
+        animation: unset;
+        left: 0;
+        position: absolute;
+        top: 100px;
+    }
+
+    #banner .banner-content img.cloud2 {
+        width: 100%;
+        animation: unset;
+        margin-left: 0;
+    }
+
+    #banner .banner-content h2 {
+        font-family: "Orbitron", sans-serif;
+        color: #fff;
+        font-size: 40px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    #banner .banner-content h3 {
+        background-image: linear-gradient(90deg, #00A8FC, rgba(0, 168, 252, 0) 56.73%);
+        color: #fff;
+        padding-left: 20px;
+        font-size: 16px;
+        border-radius: 10px;
+        height: 40px;
+        line-height: 40px;
+        font-family: "Orbitron", sans-serif;
+    }
+
+    #banner .banner-content h4 {
+        color: #fff;
+        padding-left: 40px;
+        font-size: 16px;
+        border-radius: 10px;
+        height: 80px;
+        font-family: "Orbitron", sans-serif;
+    }
+
+    #about .des p {
+        color: #fff;
+        font-family: "Orbitron", sans-serif;
+        line-height: 30px;
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+
+    #user-value .heading h2 span {
+        font-size: 30px;
+        color: #FF8908;
+        margin-right: 10px;
+    }
+
+    #user-value .heading h2 {
+        font-family: "Orbitron", sans-serif;
+        color: #fff;
+        font-size: 30px;
+    }
+
+    #user-value .user-box h3 {
+        color: #fff;
+        font-size: 30px;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 500;
+    }
+
+    #user-value .user-box p {
+        color: #fff;
+        font-family: "Orbitron", sans-serif;
+        font-size: 16px;
+    }
+
+    #user-des .des {
+        padding: 0;
+    }
+
+    #user-des .des p {
+        font-size: 14px;
+        color: #fff;
+        font-family: "Orbitron", sans-serif;
+        border-radius: 20px;
+    }
+
+    #cta .des h2 {
+        font-size: 20px;
+        color: #fff;
+        font-family: "Orbitron", sans-serif;
+        padding-bottom: 20px;
+    }
+
+    #cta .des p {
+        color: #fff;
+        font-family: "Orbitron", sans-serif;
+        font-size: 16px;
+        width: 100%;
+        margin: 40px auto;
+    }
+
+    #user-value {
+        padding: 300px 0 0;
+    }
+
+    #user-des {
+        padding: 250px 0 0;
+    }
+
+    #cta {
+        padding: 250px 0 100px;
+    }
+
+    #about {
+        padding: 150px 0 0;
+    }
+
+    #banner {
+        padding: 200px 0 0;
+    }
+
+
+
+}

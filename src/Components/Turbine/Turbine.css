@@ -1,0 +1,228 @@
+.Turbine .Heading2in {
+    font-size: 1.5rem !important;
+    line-height: 2rem !important;
+}
+
+.Turbine .Turbinecard {
+    padding-top: 60px;
+    padding-bottom: 2.5rem;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    background: rgb(22 22 22);
+    border-radius: .75rem;
+    border: 0;
+}
+
+.Turbine .Turbinecard .lefticonheading {
+    font-size: 20px;
+    color: #ff8908;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 15px;
+    font-family: orbitron, orbitron Fallback;
+}
+
+.Turbine .Turbinecard .lefticonheading span {
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    font-family: orbitron, orbitron Fallback;
+}
+
+.Turbine .Turbinecard .righttext {
+    font-size: 20px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 15px;
+    font-family: orbitron, orbitron Fallback;
+}
+
+.Turbine .Turbinecard .righttext span {
+    color: #ff8908;
+}
+
+.Turbine .Turbinecard .input-group {
+    height: 70px;
+    border-width: 1px;
+    border-color: white;
+    border-radius: 2px;
+}
+
+.Turbine .Turbinecard .input-group .form-control {
+    background: transparent;
+    color: white;
+    box-shadow: none;
+    font-family: orbitron, orbitron Fallback;
+    font-size: 16px;
+}
+
+.Turbine .Turbinecard .input-group .form-control::placeholder {
+    color: white;
+}
+
+.Turbine .Turbinecard .input-group .form-control:focus {
+    border-color: white;
+}
+
+.Turbine .Turbinecard .input-group .input-group-text {
+    background: transparent;
+    color: white;
+    font-size: 20px;
+    color: #fff;
+    font-family: orbitron, orbitron Fallback;
+}
+
+.Turbine .Turbinecard .trabibtn {
+    width: 100%;
+    font-size: 1.875rem !important;
+    line-height: 2.25rem !important;
+    padding-top: .5rem !important;
+    padding-bottom: .5rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    border-radius: .375rem !important;
+    height: 72px !important;
+    text-align: center;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+}
+
+.mainboldal .modal-content {
+    background-color: #1A1A1A;
+    border-radius: 3px;
+}
+
+.mainboldal .modal-content .modal-header .modal-title {
+    font-size: 20px;
+    color: white;
+    font-weight: 500;
+    font-family: orbitron, orbitron Fallback;
+}
+
+.mainboldal .modal-content .modal-header .btn-close {
+    color: white;
+    filter: invert(1);
+    box-shadow: none;
+}
+
+.mainboldal .modal-content .modal-body .modalheading {
+    font-size: 20px;
+    color: white;
+    font-weight: 500;
+    font-family: orbitron, orbitron Fallback;
+}
+
+.mainboldal .modal-content .modal-body .buttonGroup {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.mainboldal .modal-content .modal-body button {
+    width: 6rem;
+    height: 3.5rem;
+    border-color: white;
+    border-width: 1px;
+    font-size: 15px;
+    font-family: orbitron, orbitron Fallback;
+    color: white;
+}
+
+.mainboldal .modal-content .modal-body button:hover {
+    background: #ffffff1a;
+}
+
+.mainboldal .modal-content .modal-body button .active {
+    background: #ff8908;
+}
+
+/* Style for range slider */
+.custom-range {
+    height: 8px;
+    border-radius: 5px;
+    appearance: none;
+}
+
+.custom-range::-webkit-slider-thumb {
+    appearance: none;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    background: #007bff;
+    cursor: pointer;
+    border: none;
+    margin-top: -5px;
+}
+
+.custom-range::-moz-range-thumb {
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    background: #007bff;
+    cursor: pointer;
+    border: none;
+}
+
+
+@media (min-width: 320px) and (max-width: 575.99px) {
+    .Turbine .Turbinecard {
+        padding-top: 1.5rem !important;
+        padding-bottom: 1.5rem !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    .Turbine .Turbinecard .lefticonheading span {
+        font-size: 20px;
+    }
+
+    .Turbine .Turbinecard .righttext {
+        font-size: 12px;
+    }
+
+    .Turbine .Turbinecard .lefticonheading {
+        font-size: 12px;
+    }
+
+    .Turbine .Turbinecard .trabibtn {
+        font-size: 1.275rem !important;
+    }
+
+    .mainboldal .modal-content .modal-body button {
+        width: auto;
+        padding: 15px 19px;
+        font-size: 12px;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.99px) {
+    .Turbine .Turbinecard {
+        padding-top: 1.5rem !important;
+        padding-bottom: 1.5rem !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    .Turbine .Turbinecard .lefticonheading span {
+        font-size: 20px;
+    }
+
+    .Turbine .Turbinecard .righttext {
+        font-size: 14px;
+    }
+
+    .Turbine .Turbinecard .lefticonheading {
+        font-size: 14px;
+    }
+
+    .Turbine .Turbinecard .trabibtn {
+        font-size: 1.975rem !important;
+    }
+}

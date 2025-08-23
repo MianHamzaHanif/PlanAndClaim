@@ -1,0 +1,1057 @@
+[{
+    "inputs": [{
+        "internalType": "address",
+        "name": "_commRoot",
+        "type": "address"
+    }, {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+    }],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+}, {
+    "anonymous": false,
+    "inputs": [{
+        "indexed": true,
+        "internalType": "address",
+        "name": "_member",
+        "type": "address"
+    }, {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_referer",
+        "type": "address"
+    }],
+    "name": "CreateAccount",
+    "type": "event"
+}, {
+    "anonymous": false,
+    "inputs": [{
+        "indexed": true,
+        "internalType": "address",
+        "name": "member",
+        "type": "address"
+    }, {
+        "indexed": true,
+        "internalType": "address",
+        "name": "referrer",
+        "type": "address"
+    }, {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "level",
+        "type": "uint256"
+    }],
+    "name": "Joined",
+    "type": "event"
+}, {
+    "anonymous": false,
+    "inputs": [{
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+    }, {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "previousAdminRole",
+        "type": "bytes32"
+    }, {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "newAdminRole",
+        "type": "bytes32"
+    }],
+    "name": "RoleAdminChanged",
+    "type": "event"
+}, {
+    "anonymous": false,
+    "inputs": [{
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+    }, {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+    }, {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+    }],
+    "name": "RoleGranted",
+    "type": "event"
+}, {
+    "anonymous": false,
+    "inputs": [{
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+    }, {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+    }, {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+    }],
+    "name": "RoleRevoked",
+    "type": "event"
+}, {
+    "anonymous": false,
+    "inputs": [{
+        "indexed": true,
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+    }, {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalReward",
+        "type": "uint256"
+    }, {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalRewardOnetime",
+        "type": "uint256"
+    }, {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "time",
+        "type": "uint256"
+    }],
+    "name": "TitleRewardClaimed",
+    "type": "event"
+}, {
+    "anonymous": false,
+    "inputs": [{
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+    }, {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+    }, {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "day",
+        "type": "uint256"
+    }],
+    "name": "UpdateN",
+    "type": "event"
+}, {
+    "anonymous": false,
+    "inputs": [{
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+    }, {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+    }, {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "day",
+        "type": "uint256"
+    }],
+    "name": "UpdateP",
+    "type": "event"
+}, {
+    "inputs": [],
+    "name": "ADMIN",
+    "outputs": [{
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "DEFAULT_ADMIN_ROLE",
+    "outputs": [{
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "IdStart",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "LEVEL_OPEN_10",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "LEVEL_OPEN_10_AMOUNT",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "LEVEL_OPEN_5",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "LEVEL_OPEN_5_AMOUNT",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "OPERATORS",
+    "outputs": [{
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "ORIGIN",
+    "outputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "autoLockedDayInSecond",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "basePercent",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "claimTitleReward",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }],
+    "name": "claimedAllTitleReward",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }],
+    "name": "claimedOnTimeTitleReward",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }],
+    "name": "claimedTotalTitleReward",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "commRoot",
+    "outputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "cycleDays",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "fixPlan180",
+    "outputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+    }],
+    "name": "getAlltitalRewards",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+    }],
+    "name": "getRoleAdmin",
+    "outputs": [{
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+    }, {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+    }],
+    "name": "getRoleMember",
+    "outputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+    }],
+    "name": "getRoleMemberCount",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "name": "getTitalReward",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "uint256",
+        "name": "titleId",
+        "type": "uint256"
+    }],
+    "name": "getTitleMembers",
+    "outputs": [{
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+    }],
+    "name": "getTitleRewardOnTime",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "totalReward",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "name": "getaddress",
+    "outputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "getfunctionlength",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "titless",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+    }, {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+    }],
+    "name": "grantRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+    }, {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+    }],
+    "name": "hasRole",
+    "outputs": [{
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "relationImporter",
+        "type": "address"
+    }, {
+        "internalType": "address",
+        "name": "_commRoot",
+        "type": "address"
+    }],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "_referer",
+        "type": "address"
+    }],
+    "name": "join",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "maxPercent",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "referralChainLength",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "name": "referralCount",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "name": "referralLevelUnLock",
+    "outputs": [{
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "name": "referralLevelUnLockTime",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "name": "referralNodeAddress",
+    "outputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+    }, {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+    }],
+    "name": "renounceRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+    }, {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+    }],
+    "name": "revokeRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "users",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "direct",
+        "type": "uint256"
+    }],
+    "name": "secondLargest",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "_fixPlan180",
+        "type": "address"
+    }],
+    "name": "setFixPlan180",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "name": "titalReward",
+    "outputs": [{
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "name": "titalRewardEndTime",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "name": "titalRewardStartTime",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "name": "titleMembers",
+    "outputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "name": "titles",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "personalStake",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "directReferrals",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "smallAreaVolume",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "rewardRate",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "oneTimeReward",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "token",
+    "outputs": [{
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+    }],
+    "name": "updateAmount",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "_referer",
+        "type": "address"
+    }],
+    "name": "updateDirectReferral",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "level",
+        "type": "uint256"
+    }],
+    "name": "updateReferralLevelUnLock",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+    }],
+    "name": "updateTotalTeamMemberDeposit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "_stakeDay",
+        "type": "uint256"
+    }],
+    "name": "updateTotalTeamMemberDepositN",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "_stakeDay",
+        "type": "uint256"
+    }],
+    "name": "updateTotalTeamMemberDepositP",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+    }],
+    "name": "updateUplinerLevel",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }],
+    "name": "uplineLevelOpen",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "name": "uplineLevelOpenBool",
+    "outputs": [{
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "name": "uplineLevelOpenTime",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }],
+    "name": "userCurrentTitle",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }],
+    "name": "userDetails",
+    "outputs": [{
+        "internalType": "address",
+        "name": "referrerAddress",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "totalTeamMember",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "directReferralsCount",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "registrationTime",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "totalSelfDepositedAmount",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "totalActiveSelfDepositedAmount",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "totalTeamMemberDeposit",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "selfReward",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "titleLevel",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+    }],
+    "name": "userRewards",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "totalReward",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "perDayReward",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "claimed",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "startTime",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "daysClaimed",
+        "type": "uint256"
+    }, {
+        "internalType": "bool",
+        "name": "isActive",
+        "type": "bool"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}]
