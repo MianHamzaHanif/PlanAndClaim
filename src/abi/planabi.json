@@ -13,6 +13,10 @@
         "type": "address"
     }, {
         "internalType": "address",
+        "name": "_FixPlan",
+        "type": "address"
+    }, {
+        "internalType": "address",
         "name": "_rebateContract",
         "type": "address"
     }],
@@ -90,6 +94,16 @@
     "type": "function"
 }, {
     "inputs": [],
+    "name": "FixPlan",
+    "outputs": [{
+        "internalType": "contract IFixPlan",
+        "name": "",
+        "type": "address"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
     "name": "FlexiblePlan",
     "outputs": [{
         "internalType": "contract IFlexiblePlan",
@@ -104,6 +118,16 @@
         "name": "_number",
         "type": "uint256"
     }],
+    "name": "claimFixPlan0",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "uint256",
+        "name": "_number",
+        "type": "uint256"
+    }],
     "name": "claimFlexiblePlan",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -111,6 +135,16 @@
 }, {
     "inputs": [],
     "name": "claimTitleRewardP",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+    }],
+    "name": "depositFixPlanP0",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -220,6 +254,24 @@
         "name": "_user",
         "type": "address"
     }],
+    "name": "getSelfRewardFromDownLinerFixPlan0",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "selfRewardDownLiner",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "_currentTime",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+    }],
     "name": "getSelfRewardFromDownLinerFlexiblePlan",
     "outputs": [{
         "internalType": "uint256",
@@ -239,6 +291,24 @@
         "type": "address"
     }],
     "name": "getSelfRewardFromUpLinerFlexiblePlan",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "selfRewardUpLiner",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "_currentTime",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+    }],
+    "name": "getSelfRewardFromUpLinerFlixPlanO",
     "outputs": [{
         "internalType": "uint256",
         "name": "selfRewardUpLiner",
@@ -402,7 +472,35 @@
         "name": "_user",
         "type": "address"
     }],
+    "name": "getUserStakeLengthP0",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "_length",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+    }],
     "name": "getWithdrawRewardFlexiblePlanP",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "totalReward",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+    }],
+    "name": "getWithdrawableRewardFixPlanP0",
     "outputs": [{
         "internalType": "uint256",
         "name": "totalReward",
@@ -449,6 +547,24 @@
     "stateMutability": "view",
     "type": "function"
 }, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+    }],
+    "name": "processAutoUnlockedStakesIndexP0",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "rewardSum",
+        "type": "uint256"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
     "inputs": [],
     "name": "rebateContract",
     "outputs": [{
@@ -481,6 +597,16 @@
         "type": "address"
     }],
     "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+    }],
+    "name": "unstakeFixPlanP0",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -532,6 +658,44 @@
     }, {
         "internalType": "uint256",
         "name": "getRewardDay",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "planDay",
+        "type": "uint256"
+    }, {
+        "internalType": "bool",
+        "name": "unstake",
+        "type": "bool"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+    }, {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+    }],
+    "name": "userStakeDetailsFlixPlan0",
+    "outputs": [{
+        "internalType": "uint256",
+        "name": "stakedAmount",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "stakeTimestamp",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "unStakeTimestamp",
+        "type": "uint256"
+    }, {
+        "internalType": "uint256",
+        "name": "perStakeReward",
         "type": "uint256"
     }, {
         "internalType": "uint256",

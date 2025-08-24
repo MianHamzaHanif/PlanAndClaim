@@ -121,7 +121,13 @@ const Header = () => {
                   <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Staking</a>
                   <ul className="dropdown-menu">
                     <li><Link className="dropdown-item" to="/flexible">Flexible Staking</Link></li>
-                    <li><Link className="dropdown-item" to="/longterm">Long-term Staking</Link></li>
+                    <li><Link className="dropdown-item" to="/longterm0">FixPlan-0 Staking</Link></li>
+                    {/* <li><Link className="dropdown-item" to="/longterm30">FixPlan-30 Staking</Link></li>
+                    <li><Link className="dropdown-item" to="/longterm90">FixPlan-90 Staking</Link></li>
+                    <li><Link className="dropdown-item" to="/longterm180">FixPlan-180 Staking</Link></li>
+                    <li><Link className="dropdown-item" to="/longterm360">FixPlan-360 Staking</Link></li>
+                    <li><Link className="dropdown-item" to="/longterm480">FixPlan-480 Staking</Link></li> */}
+
                   </ul>
                 </li>
 
