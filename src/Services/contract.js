@@ -121,7 +121,9 @@ export const NETWORKS = {
     rpcUrls: [
       "https://data-seed-prebsc-1-s1.binance.org:8545",
       "https://bsc-testnet.publicnode.com",
-      "https://bsc-testnet.blockpi.network/v1/rpc/public"
+      "https://bsc-testnet.blockpi.network/v1/rpc/public",
+      "wss://bsc-testnet-rpc.publicnode.com",
+      "https://bnb-testnet.api.onfinality.io/public"
     ],
     blockExplorerUrls: ["https://testnet.bscscan.com"]
   },

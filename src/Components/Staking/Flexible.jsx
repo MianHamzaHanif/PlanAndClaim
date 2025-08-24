@@ -1,13 +1,250 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Flexible.css";
 import Header from "../header/Header";
 import Footer from "../footer/Footer";
-import Modal1 from "./Modal1"
+import Modal1 from "./Modal1";
+
+import { approveAndDepositFlexible, parseUnits, getUserStakeLength,
+getUserStakeDetails,
+simulateProcessAutoUnlockedStake } from "../../Services/FlexibleInstant";
+import { connectWallet, getExistingConnection, ensureChain } from "../../Services/contract";
+import { fetchUSDTMeta, fetchUSDTBalance, formatUnits } from "../../Services/USDTInstant";
+import { getUserDetails } from "../../Services/InviteInstant";
+
+// ---- constants / helpers (declare BEFORE use) ----
+const ZERO = "0x0000000000000000000000000000000000000000";
+const isZeroAddr = (a) => !a || String(a).toLowerCase() === ZERO.toLowerCase();
+const short = (addr) => (addr ? `${addr.slice(0, 6)}…${addr.slice(-4)}` : "");
 
 const Flexible = () => {
+  const [account, setAccount] = useState(null);
+  const [chainId, setChainId] = useState(null);
+  const [amount, setAmount] = useState("");
+  const [txMsg, setTxMsg] = useState("");
+  const [tokenSymbol, setTokenSymbol] = useState("USDT");
+  const [tokenDecimals, setTokenDecimals] = useState(18);
+  const [rawBalance, setRawBalance] = useState("0");
+  const [busy, setBusy] = useState(false);
+  const [stakes, setStakes] = useState([]);     // rows for the table
+  const [refreshing, setRefreshing] = useState(false);
+  const [isJoined, setIsJoined] = useState(null); // null=unknown
+  const [referrerAddr, setReferrerAddr] = useState(ZERO);
+  const [page, setPage] = useState(1);
+
+  // pagination
+  const PAGE_SIZE = 10;
+  const totalPages = Math.max(1, Math.ceil(stakes.length / PAGE_SIZE));
+  const pageStart = (page - 1) * PAGE_SIZE;
+  const pageRows = stakes.slice(pageStart, pageStart + PAGE_SIZE);
+
+  // ---- restore wallet on mount ----
+  useEffect(() => {
+    (async () => {
+      const { account: acc, chainId: cid } = await getExistingConnection();
+      if (acc) {
+        setAccount(acc);
+        setChainId(cid || null);
+      }
+    })();
+  }, []);
+
+  // ---- reload on MetaMask events ----
+  useEffect(() => {
+    if (!window?.ethereum) return;
+    const reload = () => window.location.reload();
+    window.ethereum.on("accountsChanged", reload);
+    window.ethereum.on("chainChanged", reload);
+    window.ethereum.on("disconnect", reload);
+    return () => {
+      window.ethereum.removeListener("accountsChanged", reload);
+      window.ethereum.removeListener("chainChanged", reload);
+      window.ethereum.removeListener("disconnect", reload);
+    };
+  }, []);
+
+  // ---- single refresh effect (balance + referral) ----
+  useEffect(() => {
+    (async () => {
+      await refreshMetaAndBalance(account);
+      await refreshReferralStatus(account);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [account, chainId]);
+
+  useEffect(() => {
+  (async () => {
+    await refreshMetaAndBalance(account);
+    await refreshReferralStatus(account);
+    await refreshHistory(); // ⬅️ load table
+  })();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [account, chainId, tokenDecimals]);
+
+  // ---- reads ----
+  const refreshMetaAndBalance = async (addr = account) => {
+    try {
+      await ensureChain("bscTestnet");
+      const meta = await fetchUSDTMeta();
+      setTokenSymbol(meta.symbol || "TOKEN");
+      setTokenDecimals(meta.decimals || 18);
+
+      if (addr) {
+        const raw = await fetchUSDTBalance(addr);
+        setRawBalance(raw || "0");
+      } else {
+        setRawBalance("0");
+      }
+    } catch (e) {
+      console.warn("refreshMetaAndBalance error:", e);
+      setRawBalance("0");
+    }
+  };
+
+  const refreshReferralStatus = async (addr = account) => {
+    if (!addr) {
+      setIsJoined(null);
+      setReferrerAddr(ZERO);
+      return;
+    }
+    try {
+      const details = await getUserDetails(addr); // tuple or object
+      const ref =
+        details?.[0] ??
+        details?.referrer ??
+        details?.referrerAddress ??
+        ZERO;
+
+      setReferrerAddr(ref);
+      setIsJoined(!isZeroAddr(ref));
+    } catch (e) {
+      console.warn("getUserDetails failed:", e);
+      setReferrerAddr(ZERO);
+      setIsJoined(false);
+    }
+  };
+
+  // ---- connect ----
+  const handleConnect = async () => {
+    try {
+      setBusy(true);
+      const { account: acc, chainId: cid } = await connectWallet({ chainKey: "bscTestnet" });
+      setAccount(acc);
+      setChainId(cid);
+      await refreshMetaAndBalance(acc);
+      await refreshReferralStatus(acc);
+    } catch (e) {
+      alert(e?.message || "Failed to connect wallet.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  // ---- stake (approve -> deposit) ----
+  const handleApproveAndStake = async () => {
+    if (isJoined === false) {
+      alert("Please join first with a referrer before staking.");
+      return;
+    }
+    if (isJoined === null) {
+      await refreshReferralStatus(account);
+      if (isJoined === false) {
+        alert("Please join first with a referrer before staking.");
+        return;
+      }
+    }
+    if (!account) {
+      alert("Please connect your wallet first.");
+      return;
+    }
+    if (!amount || Number(amount) <= 0) {
+      alert("Enter a valid amount.");
+      return;
+    }
+
+    // balance guard
+    try {
+      const want = BigInt(parseUnits(amount, tokenDecimals));
+      const have = BigInt(rawBalance || "0");
+      if (want > have) {
+        alert("Amount exceeds wallet balance.");
+        return;
+      }
+    } catch {
+      alert("Invalid amount.");
+      return;
+    }
+
+    try {
+      setBusy(true);
+      setTxMsg("Approving (if needed) and depositing…");
+      const receipt = await approveAndDepositFlexible(amount);
+      setTxMsg(`Deposit success: ${receipt.transactionHash}`);
+      await refreshMetaAndBalance(account);
+      setAmount("");
+    } catch (e) {
+      console.error(e);
+      setTxMsg(`Deposit failed: ${e?.message || e}`);
+      alert(e?.message || "Transaction failed.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const refreshHistory = async () => {
+  if (!account) return;
+  try {
+    setRefreshing(true);
+    await ensureChain("bscTestnet");
+
+    const count = await getUserStakeLength(account);
+    console.log("User stake count:", count, account);
+    
+    const nowTs = Math.floor(Date.now() / 1000);
+
+    const idxs = Array.from({ length: count }, (_, i) => i);
+    const rows = await Promise.all(
+      idxs.map(async (i) => {
+        const d = await getUserStakeDetails(account, i);
+
+        // Prefer simulated reward at "now"
+        let rewardRaw = await simulateProcessAutoUnlockedStake(account, i, nowTs);
+        if (!rewardRaw || rewardRaw === "0") {
+          // fallback to detail reward if simulation not available
+          rewardRaw = d.reward || "0";
+        }
+
+        return {
+          index: i,
+          amountRaw: d.stakedAmount,
+          amountFmt: formatUnits(d.stakedAmount, tokenDecimals, 4),
+          ts: d.stakeTimestamp,
+          tsHuman: d.stakeTimestamp ? new Date(d.stakeTimestamp * 1000).toLocaleString() : "-",
+          rewardRaw,
+          rewardFmt: formatUnits(rewardRaw, tokenDecimals, 4),
+          isUnstaked: d.isUnstaked,
+        };
+      })
+    );
+
+    // newest first
+    rows.sort((a, b) => b.ts - a.ts);
+
+    setStakes(rows);
+    setPage(1);
+  } catch (e) {
+    console.error("refreshHistory error:", e);
+  } finally {
+    setRefreshing(false);
+  }
+};
+
+
+  const displayBalance = formatUnits(rawBalance, tokenDecimals, 6);
+
   return (
     <div className="Flexible">
       <Header />
+
       <div className="container-fluid">
         <div className="row g-3">
           <div className="col-12">
@@ -18,291 +255,9 @@ const Flexible = () => {
               </span>
             </div>
           </div>
-          <div className="col-12 px-lg-3">
-            <div className="card graphcard">
-              <div className="card-body pb-4">
-                <div className="card-heading">Staking Data</div>
-                <div className="card-amount">Staking Data</div>
-                <svg
-                  tabIndex={0}
-                  role="application"
-                  className="recharts-surface"
-                  width={1248}
-                  height={330}
-                  viewBox="0 0 1248 330"
-                  style={{ width: "100%", height: "100%" }}
-                >
-                  <title />
-                  <desc />
-                  <defs>
-                    <clipPath id="recharts1-clip">
-                      <rect x={70} y={20} height={280} width={1158} />
-                    </clipPath>
-                  </defs>
-                  <g className="recharts-cartesian-grid">
-                    <g className="recharts-cartesian-grid-horizontal">
-                      <line
-                        strokeDasharray={3}
-                        stroke="#ccc"
-                        fill="none"
-                        x={70}
-                        y={20}
-                        width={1158}
-                        height={280}
-                        x1={70}
-                        y1={300}
-                        x2={1228}
-                        y2={300}
-                      />
-                      <line
-                        strokeDasharray={3}
-                        stroke="#ccc"
-                        fill="none"
-                        x={70}
-                        y={20}
-                        width={1158}
-                        height={280}
-                        x1={70}
-                        y1={230}
-                        x2={1228}
-                        y2={230}
-                      />
-                      <line
-                        strokeDasharray={3}
-                        stroke="#ccc"
-                        fill="none"
-                        x={70}
-                        y={20}
-                        width={1158}
-                        height={280}
-                        x1={70}
-                        y1={160}
-                        x2={1228}
-                        y2={160}
-                      />
-                      <line
-                        strokeDasharray={3}
-                        stroke="#ccc"
-                        fill="none"
-                        x={70}
-                        y={20}
-                        width={1158}
-                        height={280}
-                        x1={70}
-                        y1={90}
-                        x2={1228}
-                        y2={90}
-                      />
-                      <line
-                        strokeDasharray={3}
-                        stroke="#ccc"
-                        fill="none"
-                        x={70}
-                        y={20}
-                        width={1158}
-                        height={280}
-                        x1={70}
-                        y1={20}
-                        x2={1228}
-                        y2={20}
-                      />
-                    </g>
-                  </g>
-                  <g className="recharts-layer recharts-cartesian-axis recharts-yAxis yAxis">
-                    <line
-                      orientation="left"
-                      width={60}
-                      height={280}
-                      x={10}
-                      y={20}
-                      className="recharts-cartesian-axis-line"
-                      stroke="#666"
-                      fill="none"
-                      x1={70}
-                      y1={20}
-                      x2={70}
-                      y2={300}
-                    />
-                    <g className="recharts-cartesian-axis-ticks">
-                      <g className="recharts-layer recharts-cartesian-axis-tick">
-                        <line
-                          orientation="left"
-                          width={60}
-                          height={280}
-                          x={10}
-                          y={20}
-                          className="recharts-cartesian-axis-tick-line"
-                          stroke="#666"
-                          fill="none"
-                          x1={64}
-                          y1={300}
-                          x2={70}
-                          y2={300}
-                        />
-                        <text
-                          orientation="left"
-                          width={60}
-                          height={280}
-                          stroke="none"
-                          x={52}
-                          y={300}
-                          className="recharts-text recharts-cartesian-axis-tick-value"
-                          textAnchor="end"
-                          fill="#666"
-                        >
-                          <tspan x={52} dy="0.355em">
-                            0
-                          </tspan>
-                        </text>
-                      </g>
-                      <g className="recharts-layer recharts-cartesian-axis-tick">
-                        <line
-                          orientation="left"
-                          width={60}
-                          height={280}
-                          x={10}
-                          y={20}
-                          className="recharts-cartesian-axis-tick-line"
-                          stroke="#666"
-                          fill="none"
-                          x1={64}
-                          y1={230}
-                          x2={70}
-                          y2={230}
-                        />
-                        <text
-                          orientation="left"
-                          width={60}
-                          height={280}
-                          stroke="none"
-                          x={52}
-                          y={230}
-                          className="recharts-text recharts-cartesian-axis-tick-value"
-                          textAnchor="end"
-                          fill="#666"
-                        >
-                          <tspan x={52} dy="0.355em">
-                            1
-                          </tspan>
-                        </text>
-                      </g>
-                      <g className="recharts-layer recharts-cartesian-axis-tick">
-                        <line
-                          orientation="left"
-                          width={60}
-                          height={280}
-                          x={10}
-                          y={20}
-                          className="recharts-cartesian-axis-tick-line"
-                          stroke="#666"
-                          fill="none"
-                          x1={64}
-                          y1={160}
-                          x2={70}
-                          y2={160}
-                        />
-                        <text
-                          orientation="left"
-                          width={60}
-                          height={280}
-                          stroke="none"
-                          x={52}
-                          y={160}
-                          className="recharts-text recharts-cartesian-axis-tick-value"
-                          textAnchor="end"
-                          fill="#666"
-                        >
-                          <tspan x={52} dy="0.355em">
-                            2
-                          </tspan>
-                        </text>
-                      </g>
-                      <g className="recharts-layer recharts-cartesian-axis-tick">
-                        <line
-                          orientation="left"
-                          width={60}
-                          height={280}
-                          x={10}
-                          y={20}
-                          className="recharts-cartesian-axis-tick-line"
-                          stroke="#666"
-                          fill="none"
-                          x1={64}
-                          y1={90}
-                          x2={70}
-                          y2={90}
-                        />
-                        <text
-                          orientation="left"
-                          width={60}
-                          height={280}
-                          stroke="none"
-                          x={52}
-                          y={90}
-                          className="recharts-text recharts-cartesian-axis-tick-value"
-                          textAnchor="end"
-                          fill="#666"
-                        >
-                          <tspan x={52} dy="0.355em">
-                            3
-                          </tspan>
-                        </text>
-                      </g>
-                      <g className="recharts-layer recharts-cartesian-axis-tick">
-                        <line
-                          orientation="left"
-                          width={60}
-                          height={280}
-                          x={10}
-                          y={20}
-                          className="recharts-cartesian-axis-tick-line"
-                          stroke="#666"
-                          fill="none"
-                          x1={64}
-                          y1={20}
-                          x2={70}
-                          y2={20}
-                        />
-                        <text
-                          orientation="left"
-                          width={60}
-                          height={280}
-                          stroke="none"
-                          x={52}
-                          y={20}
-                          className="recharts-text recharts-cartesian-axis-tick-value"
-                          textAnchor="end"
-                          fill="#666"
-                        >
-                          <tspan x={52} dy="0.355em">
-                            4
-                          </tspan>
-                        </text>
-                      </g>
-                    </g>
-                  </g>
-                  <defs>
-                    <linearGradient
-                      id="customGradient"
-                      x1={0}
-                      y1={0}
-                      x2={0}
-                      y2={1}
-                    >
-                      <stop offset="0%" stopColor="#FF8908" stopOpacity={1} />
-                      <stop
-                        offset="100%"
-                        stopColor="rgb(255,137,8,0)"
-                        stopOpacity={1}
-                      />
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
+
       <section id="custom-tab">
         <div className="container">
           <div className="row">
@@ -338,7 +293,9 @@ const Flexible = () => {
                     </button>
                   </li>
                 </ul>
+
                 <div className="tab-content" id="myTabContent">
+                  {/* Stake tab */}
                   <div
                     className="tab-pane fade show active"
                     id="home-tab-pane"
@@ -354,39 +311,93 @@ const Flexible = () => {
                           data-bs-toggle="modal"
                           data-bs-target="#exampleModal"
                         >
-                          <img src="https://akasdao.com/img/common/computed.svg" />
+                          <img src="https://akasdao.com/img/common/computed.svg" alt="calc" />
                         </button>
+
                         <h2>
-                          Staked Amount: <span>0.0000AS</span>
+                          Balance: <span>{displayBalance} {tokenSymbol}</span>
                         </h2>
                       </div>
+
                       <div className="input-group mb-3">
                         <input
                           type="text"
                           className="form-control"
-                          placeholder="Recipient's username"
-                          aria-label="Recipient's username"
+                          placeholder={`Enter amount in ${tokenSymbol}`}
+                          aria-label="amount"
                           aria-describedby="basic-addon2"
+                          value={amount}
+                          onChange={(e) => setAmount(e.target.value.replace(/[^0-9.]/g, ""))}
                         />
-                        <span className="input-group-text" id="basic-addon2">
+                        <span
+                          className="input-group-text"
+                          id="basic-addon2"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => {
+                            // fill full balance (no truncation)
+                            setAmount(formatUnits(rawBalance, tokenDecimals, tokenDecimals));
+                          }}
+                        >
                           Max
                         </span>
                       </div>
-                      <div className="custom-flex">
-                        <img src="" />
-                        <h2>
-                          Wallet Balance: <span>0 AS</span>
-                        </h2>
+
+                      <div className="d-flex gap-2 mb-2">
+                        {!account ? (
+                          <button className="wallet-btn" onClick={handleConnect} disabled={busy}>
+                            {busy ? "Connecting..." : "Connect Wallet"}
+                          </button>
+                        ) : (
+                          <button
+                            className="wallet-btn"
+                            onClick={handleApproveAndStake}
+                            disabled={busy || !amount || isJoined === false}
+                          >
+                            {isJoined === false
+                              ? "Join First"
+                              : busy
+                                ? "Processing…"
+                                : `Approve & Stake ${tokenSymbol}`}
+                          </button>
+                        )}
                       </div>
-                      <button className="wallet-btn">Connect Wallet</button>
+
+                      {/* referral status */}
+                      {isJoined === false && (
+                        <div className="alert alert-warning py-2 mb-3" role="alert">
+                          Please join first with a referrer before deposit.
+                        </div>
+                      )}
+                      {/* {isJoined === true && (
+                        <div className="alert alert-success py-2 mb-3" role="alert">
+                          Referral linked ✔ Referrer: {short(referrerAddr)}
+                        </div>
+                      )} */}
+
+                      {/* tx status */}
+                      {/* {txMsg ? (
+                        <p style={{ marginTop: 8, wordBreak: "break-all" }}>
+                          {txMsg}{" "}
+                          {txMsg.startsWith("Deposit success: ") && (
+                            <a
+                              href={`https://testnet.bscscan.com/tx/${txMsg.replace("Deposit success: ", "")}`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              View on BscScan
+                            </a>
+                          )}
+                        </p>
+                      ) : null} */}
+
                       <ul className="list-flex">
                         <li>
                           <h6>Locked Amount</h6>
-                          <p>0 AS</p>
+                          <p>0 {tokenSymbol}</p>
                         </li>
                         <li>
                           <h6>Next Rebase Reward</h6>
-                          <p>0 AS</p>
+                          <p>0 {tokenSymbol}</p>
                         </li>
                         <li>
                           <h6>Next Rebase APY</h6>
@@ -398,7 +409,7 @@ const Flexible = () => {
                         </li>
                         <li>
                           <h6>Rebase Rewards</h6>
-                          <p>0 AS</p>
+                          <p>0 {tokenSymbol}</p>
                         </li>
                         <li>
                           <h6></h6>
@@ -407,6 +418,8 @@ const Flexible = () => {
                       </ul>
                     </div>
                   </div>
+
+                  {/* Unstake tab */}
                   <div
                     className="tab-pane fade"
                     id="profile-tab-pane"
@@ -422,39 +435,52 @@ const Flexible = () => {
                           data-bs-toggle="modal"
                           data-bs-target="#exampleModal"
                         >
-                          <img src="https://akasdao.com/img/common/computed.svg" />
+                          <img src="https://akasdao.com/img/common/computed.svg" alt="calc" />
                         </button>
                         <h2>
-                          Staked Amount: <span>0.0000AS</span>
+                          Balance: <span>{displayBalance} {tokenSymbol}</span>
                         </h2>
                       </div>
+
                       <div className="input-group mb-3">
                         <input
                           type="text"
                           className="form-control"
-                          placeholder="Recipient's username"
-                          aria-label="Recipient's username"
+                          placeholder={`Enter amount in ${tokenSymbol}`}
+                          aria-label="amount"
                           aria-describedby="basic-addon2"
+                          disabled
                         />
                         <span className="input-group-text" id="basic-addon2">
                           Max
                         </span>
                       </div>
+
                       <div className="custom-flex">
-                        <img src="" />
+                        <img src="" alt="" />
                         <h2>
-                          Unstakable Amount: <span> 0.0000 AS </span>
+                          Unstakable Amount: <span>0.0000 {tokenSymbol}</span>
                         </h2>
                       </div>
-                      <button className="wallet-btn">Connect Wallet</button>
+
+                      {!account ? (
+                        <button className="wallet-btn" onClick={handleConnect} disabled={busy}>
+                          {busy ? "Connecting..." : "Connect Wallet"}
+                        </button>
+                      ) : (
+                        <button className="wallet-btn" disabled>
+                          Connected: {short(account)}
+                        </button>
+                      )}
+
                       <ul className="list-flex">
                         <li>
                           <h6>Locked Amount</h6>
-                          <p>0 AS</p>
+                          <p>0 {tokenSymbol}</p>
                         </li>
                         <li>
                           <h6>Next Rebase Reward</h6>
-                          <p>0 AS</p>
+                          <p>0 {tokenSymbol}</p>
                         </li>
                         <li>
                           <h6>Next Rebase APY</h6>
@@ -466,7 +492,7 @@ const Flexible = () => {
                         </li>
                         <li>
                           <h6>Rebase Rewards</h6>
-                          <p>0 AS</p>
+                          <p>0 {tokenSymbol}</p>
                         </li>
                         <li>
                           <h6></h6>
@@ -485,31 +511,86 @@ const Flexible = () => {
         <div className="container">
           <div className="row">
             <div className="col-md-12">
-              <div className="head">
-                <h2>Transaction History</h2>
+              <div className="head d-flex justify-content-between align-items-center">
+                <h2 className="m-0">Transaction History</h2>
+                <button
+                  className="btn btn-outline-primary btn-sm"
+                  onClick={refreshHistory}
+                  disabled={!account || refreshing}
+                  title="Refresh latest rewards using current time"
+                >
+                  {refreshing ? "Refreshing…" : "Refresh"}
+                </button>
               </div>
-              <div class="table-responsive">
-                <table className="table">
-                  <thead>
+
+              <div className="table-responsive mt-2">
+                <table className="table table-hover align-middle">
+                  <thead className="table-dark">
                     <tr>
-                      <th>Time </th>
-                      <th>Amount(AS)</th>
-                      <th>Type </th>
-                      <th>Transaction Hash</th>
+                      <th style={{whiteSpace:"nowrap"}}>#</th>
+                      <th style={{whiteSpace:"nowrap"}}>Stake Time</th>
+                      <th style={{whiteSpace:"nowrap"}}>Staked Amount ({tokenSymbol})</th>
+                      <th style={{whiteSpace:"nowrap"}}>Reward ({tokenSymbol})</th>
+                      <th style={{whiteSpace:"nowrap"}}>Status</th>
                     </tr>
                   </thead>
+
                   <tbody>
-                    <tr>
-                      <td colspan="4">No Data</td>
-                    </tr>
+                    {pageRows.length === 0 ? (
+                      <tr>
+                        <td colSpan="5" className="text-center py-4">
+                          {account ? "No stakes found." : "Connect wallet to see history."}
+                        </td>
+                      </tr>
+                    ) : (
+                      pageRows.map((r) => (
+                        <tr key={r.index}>
+                          <td>{r.index}</td>
+                          <td>
+                            <div className="fw-semibold">{r.tsHuman}</div>
+                            <div className="text-muted" style={{fontSize:12}}>
+                              {r.ts ? `(${r.ts})` : "-"}
+                            </div>
+                          </td>
+                          <td className="fw-semibold">{r.amountFmt}</td>
+                          <td className="fw-semibold">{r.rewardFmt}</td>
+                          <td>
+                          {r.isUnstaked ? (
+                            <span className="badge bg-secondary">Unstaked</span>
+                          ) : (
+                            <span className="badge bg-primary">Staked</span>
+                          )}
+                        </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
+              </div>
+
+              {/* Pagination */}
+              <div className="d-flex justify-content-end align-items-center gap-2">
+                <button
+                  className="btn btn-sm btn-secondary"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page <= 1}
+                >
+                  ‹ Prev
+                </button>
+                <span className="px-2 .referral-input referral-input">Page {page} / {totalPages}</span>
+                <button
+                  className="btn btn-sm btn-secondary referral-input"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page >= totalPages}
+                >
+                  Next ›
+                </button>
               </div>
             </div>
           </div>
         </div>
       </section>
-      <Modal1/>
+      <Modal1 />
       <Footer />
     </div>
   );

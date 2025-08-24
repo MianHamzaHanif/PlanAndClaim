@@ -3,7 +3,7 @@ import "./Invite.css";
 import Header from "../header/Header";
 import Footer from "../footer/Footer";
 import { connectWallet, getExistingConnection, ensureChain } from "../../Services/contract";
-import { joinWithReferrer, getUserDetails, getReferralCount, getReferralNodeAddress } from "../../Services/Instant";
+import { joinWithReferrer, getUserDetails, getReferralCount, getReferralNodeAddress } from "../../Services/InviteInstant.js";
 import Web3 from "web3";
 import { useNavigate, useParams } from "react-router-dom";
 

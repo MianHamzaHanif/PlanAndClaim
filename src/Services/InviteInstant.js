@@ -3,26 +3,26 @@ import { getProvider, ensureChain } from "./contract";
 import referralAbi from "../abi/Communityabi.json";
 
 // ✅ sirf BSC Testnet ka address rakho
-export const REFERRAL_CONTRACT_ADDRESS = "0xF55CF37d74b2F7Fdf511f90083792f9bd3c1AA7A";
+export const REFERRAL_CONTRACT_ADDRESS = "0xFC5B0674830213Bb4C9e4f679Ed8067FD27901BA";
 
 export function getReferralContract() {
-    const provider = getProvider();
-    if (!provider) throw new Error("No crypto wallet found. Please install MetaMask.");
-    const web3 = new Web3(provider);
-    return new web3.eth.Contract(referralAbi, REFERRAL_CONTRACT_ADDRESS);
+  const provider = getProvider();
+  if (!provider) throw new Error("No crypto wallet found. Please install MetaMask.");
+  const web3 = new Web3(provider);
+  return new web3.eth.Contract(referralAbi, REFERRAL_CONTRACT_ADDRESS);
 }
 
 export async function joinWithReferrer(referrer, fromAccount) {
-    // ✅ force switch to testnet only
-    await ensureChain("bscTestnet");
+  // ✅ force switch to testnet only
+  await ensureChain("bscTestnet");
 
-    const contract = getReferralContract();
+  const contract = getReferralContract();
 
-    const tx = await contract.methods.join(referrer).send({
-        from: fromAccount
-    });
+  const tx = await contract.methods.join(referrer).send({
+    from: fromAccount
+  });
 
-    return tx;
+  return tx;
 }
 
 export async function getUserDetails(user, { chainKey = "bscTestnet" } = {}) {
