@@ -3,7 +3,7 @@ import "./Invite.css";
 import Header from "../header/Header";
 import Footer from "../footer/Footer";
 import { connectWallet, getExistingConnection, ensureChain } from "../../Services/contract";
-import { joinWithReferrer, getUserDetails, getReferralCount, getReferralNodeAddress } from "../../Services/InviteInstant.js";
+import { joinWithReferrer, getUserDetails, getReferralCount, getReferralNodeAddress } from "../../Services/planInstant.js";
 import Web3 from "web3";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -111,9 +111,8 @@ const formatDateTime = (sec) => {
           onChainRef && Web3.utils.isAddress(onChainRef) && onChainRef !== ZERO_ADDRESS;
 
         const link = hasRef
-          ? `${window.location.origin}/invite/${onChainRef}`
+          ? `${window.location.origin}/invite/${Web3.utils.toChecksumAddress(account)}`
           : `${window.location.origin}/invite/`;
-
         setReferralLink(link);
         await loadDirectReferrals(account, chainId);
       } catch {
@@ -220,7 +219,7 @@ const formatDateTime = (sec) => {
 
         const hasRef = newRef && Web3.utils.isAddress(newRef) && newRef !== ZERO_ADDRESS;
         const link = hasRef
-          ? `${window.location.origin}/invite/${newRef}`
+          ? `${window.location.origin}/invite/${Web3.utils.toChecksumAddress(useAccount)}`
           : `${window.location.origin}/invite/`;
         setReferralLink(link);
       } catch {}
