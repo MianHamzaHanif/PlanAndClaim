@@ -6,6 +6,9 @@
     padding-top: 110px;
 }
 
+.form-label {
+    color: #fff;
+}
 
 .Flexible .heading {
     font-size: 2.25rem;
@@ -205,8 +208,9 @@
     line-height: 40px;
 }
 
+
 #custom-tab .card ul.list-flex li h6 {
-    color: #f3f0f0;
+    color: #FF8908;
     font-family: "Orbitron", sans-serif;
     font-size: 18px;
     font-weight: 100;

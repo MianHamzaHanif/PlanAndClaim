@@ -4,12 +4,12 @@ import PrivateRoutes from "./Utility/PrivateRoutes";
 import Home from "./Components/HomePage/home";
 import Dashboard from "./Components/Dashboard/Dashboard";
 import Flexible from "./Components/Staking/Flexible";
-import LongTerm from "./Components/Staking/LongTerm0";
-// import LongTerm30 from "./Components/Staking/LongTerm30";
-// import LongTerm90 from "./Components/Staking/LongTerm90";
-// import LongTerm180 from "./Components/Staking/LongTerm180";
-// import LongTerm360 from "./Components/Staking/LongTerm360";
-// import LongTerm480 from "./Components/Staking/LongTerm480";
+import LongTerm0 from "./Components/Staking/LongTerm0";
+import LongTerm30 from "./Components/Staking/LongTerm30";
+import LongTerm90 from "./Components/Staking/LongTerm90";
+import LongTerm180 from "./Components/Staking/LongTerm180";
+import LongTerm360 from "./Components/Staking/LongTerm360";
+import LongTerm480 from "./Components/Staking/LongTerm480";
 import LiquidityBonds from "./Components/Bonds/LiquidityBonds";
 import Comeson from "./Components/Bonds/Comeson";
 import Resonance from "./Components/DAO/Resonance";
@@ -32,13 +32,13 @@ function App() {
         <Route path="/invite/:ref" element={<Invite />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/flexible" element={<Flexible />} />
-        <Route path="/longterm" element={<LongTerm />} />
-        {/* <Route path="/longterm30" element={<LongTerm30 />} />
+        <Route path="/longterm0" element={<LongTerm0 />} />
+        <Route path="/longterm30" element={<LongTerm30 />} />
         <Route path="/longterm90" element={<LongTerm90 />} />
         <Route path="/longterm180" element={<LongTerm180 />} />
         <Route path="/longterm360" element={<LongTerm360 />} />
         <Route path="/longterm480" element={<LongTerm480 />} />
-        <Route path="/liquidity" element={<LiquidityBonds />} /> */}
+        <Route path="/liquidity" element={<LiquidityBonds />} /> 
         <Route path="/comeson" element={<Comeson />} />
         <Route path="/resonance" element={<Resonance />} />
         <Route path="/Title" element={<LevelPool />} />

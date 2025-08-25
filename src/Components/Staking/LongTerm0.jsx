@@ -6,7 +6,7 @@ import Modal1 from "./Modal1";
 
 import {
   getUserDetails,
-  approveAndDepositFlixPlan0,
+  approveAndDepositFixPlan0,
   parseUnits,
   getUserStakeLength,
   getUserStakeDetails,
@@ -243,7 +243,7 @@ const Flexible = () => {
     try {
       setBusy(true);
       setTxMsg("Approving (if needed) and depositing…");
-      const receipt = await approveAndDepositFlixPlan0(amount);
+      const receipt = await approveAndDepositFixPlan0(amount);
       setTxMsg(`Deposit success: ${receipt.transactionHash}`);
       await refreshMetaAndBalance(account);
       await refreshDashboardStats(account);

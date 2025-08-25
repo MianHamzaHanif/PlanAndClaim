@@ -3,7 +3,7 @@ import { getProvider, ensureChain } from "./contract";
 import referralAbi from "../abi/Communityabi.json";
 
 // ✅ sirf BSC Testnet ka address rakho
-export const REFERRAL_CONTRACT_ADDRESS = "0xFC5B0674830213Bb4C9e4f679Ed8067FD27901BA";
+export const REFERRAL_CONTRACT_ADDRESS = "0x82dda9B71Fb07af73579C46C0b0468611D7575FD";
 
 export function getReferralContract() {
   const provider = getProvider();

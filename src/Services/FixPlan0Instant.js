@@ -5,8 +5,8 @@ import { getUSDTContract, fetchUSDTMeta } from "./USDTInstant";
 import planabi from "../abi/planabi.json";
 
 // ✅ Sirf BSC Testnet ka address rakho
-export const PLAN_CONTRACT_ADDRESS = "0xb703D92b772602c1DDe51c17c3626c417D9C3CB0";
-export const FIX_PLAN0_ADDRESS = "0x72754b46C8572b6C4405D431efe242247c6CDF04";
+export const PLAN_CONTRACT_ADDRESS = "0x82dda9B71Fb07af73579C46C0b0468611D7575FD";
+export const FIX_PLAN0_ADDRESS = "0xfAe7CEc1f833F65FB86899Fabd49451e433fB2B4";
 
 // ---- Unstake helpers ----
 export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
@@ -69,7 +69,7 @@ export function parseUnits(amountStr, decimals = 18) {
 }
 
 // export async function approveAndDepositFlexible(amountHuman) {
-export async function approveAndDepositFlixPlan0(amountHuman) {
+export async function approveAndDepositFixPlan0(amountHuman) {
     await ensureChain("bscTestnet");
 
     const provider = getProvider();
@@ -144,11 +144,11 @@ export async function simulateProcessAutoUnlockedStake(user, index, nowTs) {
 }
 
 function toUintString(v) {
-  if (v == null) return "0";
-  if (Array.isArray(v)) v = v[0];     // just in case
-  const s = String(v);
-  try { return (s.startsWith("0x") ? BigInt(s) : BigInt(s)).toString(); }
-  catch { return "0"; }
+    if (v == null) return "0";
+    if (Array.isArray(v)) v = v[0];     // just in case
+    const s = String(v);
+    try { return (s.startsWith("0x") ? BigInt(s) : BigInt(s)).toString(); }
+    catch { return "0"; }
 }
 
 export async function getUplineLevelOpen(user, { chainKey = "bscTestnet" } = {}) {
@@ -165,11 +165,11 @@ export async function getReferralLevelUnLock(user, index, { chainKey = "bscTestn
 }
 
 export async function getWithdrawRewardFixPlanP(user) {
-  if (!isValidAddress(user)) throw new Error("Invalid address");
-  await ensureChain("bscTestnet");
-  const c = getPlanContract();
-  const v = await c.methods.getWithdrawableRewardFixPlanP0(user).call();
-  return toUintString(v);
+    if (!isValidAddress(user)) throw new Error("Invalid address");
+    await ensureChain("bscTestnet");
+    const c = getPlanContract();
+    const v = await c.methods.getWithdrawableRewardFixPlanP0(user).call();
+    return toUintString(v);
 }
 
 export async function getSelfRewardFromUpLinerFixPlan(user, { chainKey = "bscTestnet" } = {}) {
@@ -177,10 +177,10 @@ export async function getSelfRewardFromUpLinerFixPlan(user, { chainKey = "bscTes
     const c = getPlanContract();
     let v;
     try {
-        v = await c.methods.getSelfRewardFromUpLinerFlixPlanO(user).call();
+        v = await c.methods.getSelfRewardFromUpLinerFixPlan0(user).call();
     } catch {
         // fallback if contract uses msg.sender (no arg)
-        try { v = await c.methods.getSelfRewardFromUpLinerFlixPlanO().call({ from: user }); }
+        try { v = await c.methods.getSelfRewardFromUpLinerFixPlan0().call({ from: user }); }
         catch { v = "0"; }
     }
     const raw = (v && (v.reward ?? v.amount ?? v.value ?? v[0])) ?? v ?? "0";
@@ -229,14 +229,14 @@ export const claim = {
 };
 
 export async function unstakeFixPlanP0({ from, index, chainKey = "bscTestnet" } = {}) {
-  await ensureChain(chainKey);
-  if (!isValidAddress(from)) throw new Error("Invalid address");
-  const i = Number(index);
-  if (!Number.isInteger(i) || i < 0) throw new Error("Invalid index");
+    await ensureChain(chainKey);
+    if (!isValidAddress(from)) throw new Error("Invalid address");
+    const i = Number(index);
+    if (!Number.isInteger(i) || i < 0) throw new Error("Invalid index");
 
-  const c = getPlanContract();
-  // Contract now expects only (index)
-  return await c.methods.unstakeFixPlanP0(i).send({ from });
+    const c = getPlanContract();
+    // Contract now expects only (index)
+    return await c.methods.unstakeFixPlanP0(i).send({ from });
 }
 
 

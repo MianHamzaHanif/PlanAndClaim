@@ -6,11 +6,10 @@ import planabi from "../abi/planabi.json";
 
 // ✅ Sirf BSC Testnet ka address rakho
 export const PLAN_CONTRACT_ADDRESS = "0x82dda9B71Fb07af73579C46C0b0468611D7575FD";
-export const FLEXIBLE_PLAN_ADDRESS = "0xD9D906666a1c450c6859F778aE504A05BF48B728";
+export const FIX_PLAN180_ADDRESS = "0xfd8b13c98A2AE479eD6c5ff647aB3A41Ece8E6Be";
 
 // ---- Unstake helpers ----
 export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
-export const ALLOWED_UNSTAKE_DAYS = [5, 10, 15, 20];
 
 export function isValidAddress(addr) {
     try {
@@ -69,7 +68,8 @@ export function parseUnits(amountStr, decimals = 18) {
     return (BigInt(w || "0") * base + BigInt(frac || "0")).toString();
 }
 
-export async function approveAndDepositFlexible(amountHuman) {
+// export async function approveAndDepositFlexible(amountHuman) {
+export async function approveAndDepositFixPlan180(amountHuman) {
     await ensureChain("bscTestnet");
 
     const provider = getProvider();
@@ -83,29 +83,29 @@ export async function approveAndDepositFlexible(amountHuman) {
     const amount = parseUnits(amountHuman, decimals);
 
     // 1) Allowance check
-    const allowance = await usdt.methods.allowance(from, FLEXIBLE_PLAN_ADDRESS).call();
+    const allowance = await usdt.methods.allowance(from, FIX_PLAN180_ADDRESS).call();
 
     // 2) Approve if needed
     if (BigInt(allowance) < BigInt(amount)) {
-        await usdt.methods.approve(FLEXIBLE_PLAN_ADDRESS, amount).send({ from });
+        await usdt.methods.approve(FIX_PLAN180_ADDRESS, amount).send({ from });
     }
 
     // 3) Deposit to plan
-    const receipt = await plan.methods.depositFlexiblePlanP(amount).send({ from });
+    const receipt = await plan.methods.depositFixPlanP180(amount).send({ from });
     return receipt;
 }
 
 export async function getUserStakeLength(user) {
     await ensureChain("bscTestnet");
     const c = getPlanContract();
-    const n = await c.methods.getUserStakeLengthP(user).call();
+    const n = await c.methods.getUserStakeLengthP180(user).call();
     return Number(n || 0);
 }
 
 export async function getUserStakeDetails(user, index) {
     await ensureChain("bscTestnet");
     const c = getPlanContract();
-    const d = await c.methods.userStakeDetailsFlexiblePlan(user, index).call();
+    const d = await c.methods.userStakeDetailsFlixPlan180(user, index).call();
 
     const asArr = Array.isArray(d) ? d : null;
     const lastTupleVal = asArr ? asArr[asArr.length - 1] : undefined;
@@ -134,7 +134,7 @@ export async function simulateProcessAutoUnlockedStake(user, index, nowTs) {
     const c = getPlanContract();
     try {
         const res = await c.methods
-            .processAutoUnlockedStakesIndexP(user, index, String(nowTs))
+            .processAutoUnlockedStakesIndexP180(user, index, String(nowTs))
             .call({ from: user });
         const reward = res?.reward ?? res?.[0] ?? res ?? "0";
         return String(reward);
@@ -164,38 +164,38 @@ export async function getReferralLevelUnLock(user, index, { chainKey = "bscTestn
     return await c.methods.getReferralLevelUnLock(user, index).call();
 }
 
-export async function getWithdrawRewardFlexiblePlanP(user) {
+export async function getWithdrawRewardFixPlanP(user) {
     if (!isValidAddress(user)) throw new Error("Invalid address");
     await ensureChain("bscTestnet");
     const c = getPlanContract();
-    const v = await c.methods.getWithdrawRewardFlexiblePlanP(user).call();
+    const v = await c.methods.getWithdrawableRewardFixPlanP30(user).call();
     return toUintString(v);
 }
 
-export async function getSelfRewardFromUpLinerFlexiblePlan(user, { chainKey = "bscTestnet" } = {}) {
+export async function getSelfRewardFromUpLinerFixPlan(user, { chainKey = "bscTestnet" } = {}) {
     await ensureChain(chainKey);
     const c = getPlanContract();
     let v;
     try {
-        v = await c.methods.getSelfRewardFromUpLinerFlexiblePlan(user).call();
+        v = await c.methods.getSelfRewardFromUpLinerFixPlan180(user).call();
     } catch {
         // fallback if contract uses msg.sender (no arg)
-        try { v = await c.methods.getSelfRewardFromUpLinerFlexiblePlan().call({ from: user }); }
+        try { v = await c.methods.getSelfRewardFromUpLinerFixPlan180().call({ from: user }); }
         catch { v = "0"; }
     }
     const raw = (v && (v.reward ?? v.amount ?? v.value ?? v[0])) ?? v ?? "0";
     return String(raw || "0");
 }
 
-export async function getSelfRewardFromDownLinerFlexiblePlan(user, { chainKey = "bscTestnet" } = {}) {
+export async function getSelfRewardFromDownLinerFixPlan(user, { chainKey = "bscTestnet" } = {}) {
     await ensureChain(chainKey);
     const c = getPlanContract();
     let v;
     try {
-        v = await c.methods.getSelfRewardFromDownLinerFlexiblePlan(user).call();
+        v = await c.methods.getSelfRewardFromDownLinerFixPlan180(user).call();
     } catch {
         // fallback if contract uses msg.sender (no arg)
-        try { v = await c.methods.getSelfRewardFromDownLinerFlexiblePlan().call({ from: user }); }
+        try { v = await c.methods.getSelfRewardFromDownLinerFixPlan180().call({ from: user }); }
         catch { v = "0"; }
     }
     const raw = (v && (v.reward ?? v.amount ?? v.value ?? v[0])) ?? v ?? "0";
@@ -208,7 +208,7 @@ export const CLAIM_TYPES = {
     DOWNLINER: 3,
 };
 
-export async function claimFlexiblePlan(typeNum, { chainKey = "bscTestnet" } = {}) {
+export async function claimFixPlan180(typeNum, { chainKey = "bscTestnet" } = {}) {
     await ensureChain(chainKey);
     const t = Number(typeNum);
     if (![1, 2, 3].includes(t))
@@ -220,21 +220,23 @@ export async function claimFlexiblePlan(typeNum, { chainKey = "bscTestnet" } = {
 
     const c = getPlanContract();
     // If contract expects uint8/uint256 it's fine; string/number both ok in web3
-    return await c.methods.claimFlexiblePlan(t).send({ from });
+    return await c.methods.claimFixPlan180(t).send({ from });
 }
 export const claim = {
-    self: (opts) => claimFlexiblePlan(CLAIM_TYPES.SELF, opts),
-    downline: (opts) => claimFlexiblePlan(CLAIM_TYPES.DOWNLINER, opts),
-    upline: (opts) => claimFlexiblePlan(CLAIM_TYPES.UPLINER, opts),
+    self: (opts) => claimFixPlan180(CLAIM_TYPES.SELF, opts),
+    downline: (opts) => claimFixPlan180(CLAIM_TYPES.DOWNLINER, opts),
+    upline: (opts) => claimFixPlan180(CLAIM_TYPES.UPLINER, opts),
 };
 
-export async function unstakeFlexiblePlanP({ from, index, days, chainKey = "bscTestnet" } = {}) {
+export async function unstakeFixPlanP180({ from, index, chainKey = "bscTestnet" } = {}) {
     await ensureChain(chainKey);
     if (!isValidAddress(from)) throw new Error("Invalid address");
     const i = Number(index);
     if (!Number.isInteger(i) || i < 0) throw new Error("Invalid index");
-    const d = assertAllowedUnstakeDay(days); // 5,10,15,20 only
 
     const c = getPlanContract();
-    return await c.methods.unstakeFlexiblePlanP(i, d).send({ from });
+    // Contract now expects only (index)
+    return await c.methods.unstakeFixPlanP180(i).send({ from });
 }
+
+
