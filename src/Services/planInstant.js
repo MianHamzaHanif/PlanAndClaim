@@ -434,3 +434,49 @@ export async function unstakeFlexiblePlanP({ from, index, chainKey = "bscTestnet
     // Contract now expects only (index)
     return await c.methods.unstakeFlexiblePlanP(i).send({ from });
 }
+
+
+
+export async function getUserTitleDetails(user) {
+    if (!isValidAddress(user)) throw new Error("Invalid address");
+    await ensureChain("bscTestnet");
+    const c = getPlanContract();
+
+    let d;
+    d = await c.methods.getCurrentTitleRewardP(user).call();
+    if (d && (d.amount !== undefined || d.status !== undefined || d.time !== undefined)) {
+        return {
+            amount: String(d.amount ?? d[0] ?? "0"),
+            time: Number(d.time ?? d[1] ?? 0),
+            status: Boolean(d.status ?? d[2] ?? false),
+            raw: d,
+        };
+    }
+
+    // If ABI is (claimReward, unStakeTimestamp, perDayClaimReward, ...)
+    const amount = String(d?.claimReward ?? d?.[0] ?? "0");
+    const time = Number(d?.unStakeTimestamp ?? d?.unlockTimestamp ?? d?.[1] ?? 0);
+
+    // Derive status if not provided: unlocked = now >= time
+    const status =
+        d?.status !== undefined
+            ? Boolean(d.status)
+            : (Math.floor(Date.now() / 1000) >= (time || 0));
+
+    return { amount, time, status, raw: d };
+}
+
+
+
+
+export async function claimTitlePlan({ chainKey = "bscTestnet" } = {}) {
+    await ensureChain(chainKey);
+
+    const provider = getProvider();
+    const web3 = new Web3(provider);
+    const [from] = await web3.eth.requestAccounts();
+
+    const c = getPlanContract();
+    // If contract expects uint8/uint256 it's fine; string/number both ok in web3
+    return await c.methods.claimTitleRewardP(t).send({ from });
+}

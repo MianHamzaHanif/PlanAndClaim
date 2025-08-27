@@ -22,6 +22,10 @@ import Turbine from "./Components/Turbine/Turbine";
 import Swap from "./Components/Swap/Swap";
 
 import Invite from "./Components/Invite/Invite";
+import DirectReward from "./Components/Bonds/DirectReward";
+import ServiceReward from "./Components/Bonds/ServiceReward";
+import RebateReward from "./Components/Bonds/RebateReward";
+import TitleReward from "./Components/Bonds/TitleReward";
 
 function App() {
   return (
@@ -48,6 +52,13 @@ function App() {
         <Route path="/incentive" element={<Incentive />} />
         <Route path="/turbine" element={<Turbine />} />
       	<Route path="/swap" element={<Swap />} />
+      	<Route path="/direct-reward" element={<DirectReward />} />
+      	<Route path="/service-reward" element={<ServiceReward />} />
+      	<Route path="/rebate-reward" element={<RebateReward />} />
+      	<Route path="/title-reward" element={<TitleReward />} />
+
+
+
 
 
         <Route path="/invite" element={<Invite />} />

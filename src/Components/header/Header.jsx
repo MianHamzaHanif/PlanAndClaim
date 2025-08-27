@@ -126,7 +126,7 @@ const Header = () => {
                     <li><Link className="dropdown-item" to="/longterm90">FixPlan-90 Staking</Link></li>
                     <li><Link className="dropdown-item" to="/longterm180">FixPlan-180 Staking</Link></li>
                     <li><Link className="dropdown-item" to="/longterm360">FixPlan-360 Staking</Link></li>
-                    <li><Link className="dropdown-item" to="/longterm480">FixPlan-480 Staking</Link></li> 
+                    <li><Link className="dropdown-item" to="/longterm480">FixPlan-480 Staking</Link></li>
 
                   </ul>
                 </li>
@@ -134,6 +134,10 @@ const Header = () => {
                 <li className="nav-item dropdown">
                   <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Bonds</a>
                   <ul className="dropdown-menu">
+                    <li><Link className="dropdown-item" to="/direct-reward">Direct Reward</Link></li>
+                    <li><Link className="dropdown-item" to="/service-reward">Service Reward</Link></li>
+                    <li><Link className="dropdown-item" to="/rebate-reward">Rebate Reward</Link></li>
+                    <li><Link className="dropdown-item" to="/title-reward">Title Reward</Link></li>
                     <li><Link className="dropdown-item" to="/liquidity">Liquidity Bonds</Link></li>
                     <li><Link className="dropdown-item" to="/comeson">Treasury Bonds</Link></li>
                     <li><Link className="dropdown-item" to="/comeson">Burn Bonds</Link></li>
