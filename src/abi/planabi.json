@@ -1,1565 +1,2124 @@
-[{
-    "inputs": [{
-        "internalType": "address",
-        "name": "_Community",
-        "type": "address"
-    }, {
-        "internalType": "address",
-        "name": "_token",
-        "type": "address"
-    }, {
-        "internalType": "address",
-        "name": "_FlexiblePlan",
-        "type": "address"
-    }, {
-        "internalType": "address",
-        "name": "_FixPlan",
-        "type": "address"
-    }, {
-        "internalType": "address",
-        "name": "_FixPlan30",
-        "type": "address"
-    }, {
-        "internalType": "address",
-        "name": "_FixPlan90",
-        "type": "address"
-    }, {
-        "internalType": "address",
-        "name": "_FixPlan180",
-        "type": "address"
-    }, {
-        "internalType": "address",
-        "name": "_FixPlan360",
-        "type": "address"
-    }, {
-        "internalType": "address",
-        "name": "_FixPlan480",
-        "type": "address"
-    }, {
-        "internalType": "address",
-        "name": "_rebateContract",
-        "type": "address"
-    }],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-}, {
-    "anonymous": false,
-    "inputs": [{
-        "indexed": true,
-        "internalType": "address",
-        "name": "_member",
-        "type": "address"
-    }, {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_referer",
-        "type": "address"
-    }, {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-    }],
-    "name": "CreateAccount",
-    "type": "event"
-}, {
-    "anonymous": false,
-    "inputs": [{
-        "indexed": true,
-        "internalType": "address",
-        "name": "previousOwner",
-        "type": "address"
-    }, {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-    }],
-    "name": "OwnershipTransferred",
-    "type": "event"
-}, {
-    "anonymous": false,
-    "inputs": [{
-        "indexed": true,
-        "internalType": "address",
-        "name": "caller",
-        "type": "address"
-    }, {
-        "indexed": true,
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-    }, {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-    }],
-    "name": "ServiceReward",
-    "type": "event"
-}, {
-    "anonymous": false,
-    "inputs": [{
-        "indexed": true,
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "totalReward",
-        "type": "uint256"
-    }, {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "totalRewardOnetime",
-        "type": "uint256"
-    }, {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-    }],
-    "name": "TitleRewardClaimed",
-    "type": "event"
-}, {
-    "inputs": [],
-    "name": "Community",
-    "outputs": [{
-        "internalType": "contract ICommunity",
-        "name": "",
-        "type": "address"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "FixPlan",
-    "outputs": [{
-        "internalType": "contract IFixPlan",
-        "name": "",
-        "type": "address"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "FixPlan180",
-    "outputs": [{
-        "internalType": "contract IFixPlan180",
-        "name": "",
-        "type": "address"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "FixPlan30",
-    "outputs": [{
-        "internalType": "contract IFixPlan30",
-        "name": "",
-        "type": "address"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "FixPlan360",
-    "outputs": [{
-        "internalType": "contract IFixPlan360",
-        "name": "",
-        "type": "address"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "FixPlan480",
-    "outputs": [{
-        "internalType": "contract IFixPlan480",
-        "name": "",
-        "type": "address"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "FixPlan90",
-    "outputs": [{
-        "internalType": "contract IFixPlan90",
-        "name": "",
-        "type": "address"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "FlexiblePlan",
-    "outputs": [{
-        "internalType": "contract IFlexiblePlan",
-        "name": "",
-        "type": "address"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "_number",
-        "type": "uint256"
-    }],
-    "name": "claimFixPlan0",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "_number",
-        "type": "uint256"
-    }],
-    "name": "claimFixPlan180",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "_number",
-        "type": "uint256"
-    }],
-    "name": "claimFixPlan30",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "_number",
-        "type": "uint256"
-    }],
-    "name": "claimFixPlan360",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "_number",
-        "type": "uint256"
-    }],
-    "name": "claimFixPlan480",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "_number",
-        "type": "uint256"
-    }],
-    "name": "claimFixPlan90",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "_number",
-        "type": "uint256"
-    }],
-    "name": "claimFlexiblePlan",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "claimTitleRewardP",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-    }],
-    "name": "depositFixPlanP0",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-    }],
-    "name": "depositFixPlanP180",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-    }],
-    "name": "depositFixPlanP30",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-    }],
-    "name": "depositFixPlanP360",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-    }],
-    "name": "depositFixPlanP480",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-    }],
-    "name": "depositFixPlanP90",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-    }],
-    "name": "depositFlexiblePlanP",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getAlltitalRewardsP",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "_reward",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "level",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "getPeferralNodeAddress",
-    "outputs": [{
-        "internalType": "address",
-        "name": "_address",
-        "type": "address"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "level",
-        "type": "uint256"
-    }],
-    "name": "getReferralCount",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "_count",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "level",
-        "type": "uint256"
-    }],
-    "name": "getReferralLevelUnLock",
-    "outputs": [{
-        "internalType": "bool",
-        "name": "_bool",
-        "type": "bool"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "level",
-        "type": "uint256"
-    }],
-    "name": "getReferralLevelUnLockTime",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "_time",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getSelfRewardFromDownLinerFixPlan0",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "selfRewardDownLiner",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "_currentTime",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getSelfRewardFromDownLinerFixPlan180",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "selfRewardDownLiner",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "_currentTime",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getSelfRewardFromDownLinerFixPlan30",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "selfRewardDownLiner",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "_currentTime",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getSelfRewardFromDownLinerFixPlan360",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "selfRewardDownLiner",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "_currentTime",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getSelfRewardFromDownLinerFixPlan480",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "selfRewardDownLiner",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "_currentTime",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getSelfRewardFromDownLinerFixPlan90",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "selfRewardDownLiner",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "_currentTime",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getSelfRewardFromDownLinerFlexiblePlan",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "selfRewardDownLiner",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "_currentTime",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getSelfRewardFromUpLinerFixPlan0",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "selfRewardUpLiner",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "_currentTime",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getSelfRewardFromUpLinerFixPlan180",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "selfRewardUpLiner",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "_currentTime",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getSelfRewardFromUpLinerFixPlan30",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "selfRewardUpLiner",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "_currentTime",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getSelfRewardFromUpLinerFixPlan360",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "selfRewardUpLiner",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "_currentTime",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getSelfRewardFromUpLinerFixPlan480",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "selfRewardUpLiner",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "_currentTime",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getSelfRewardFromUpLinerFixPlan90",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "selfRewardUpLiner",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "_currentTime",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getSelfRewardFromUpLinerFlexiblePlan",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "selfRewardUpLiner",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "_currentTime",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getTitleRewardOnTimeP",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "_reward",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getUplineLevelOpen",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "_uLevel",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "level",
-        "type": "uint256"
-    }],
-    "name": "getUplineLevelOpenBool",
-    "outputs": [{
-        "internalType": "bool",
-        "name": "_isULevel",
-        "type": "bool"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "level",
-        "type": "uint256"
-    }],
-    "name": "getUplineLevelOpenTime",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "_time",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getUserDetailsP",
-    "outputs": [{
-        "internalType": "address",
-        "name": "referrerAddress",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "totalTeamMember",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "registrationTime",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "totalSelfDepositedAmount",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "totalTeamMemberDeposit",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "titleLevel",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "_titleId",
-        "type": "uint256"
-    }],
-    "name": "getUserRewardP",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "totalReward",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "perDayReward",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "claimed",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "startTime",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "daysClaimed",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getUserStakeLengthP",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "_length",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getUserStakeLengthP0",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "_length",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getUserStakeLengthP180",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "_length",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getUserStakeLengthP30",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "_length",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getUserStakeLengthP360",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "_length",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getUserStakeLengthP480",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "_length",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getUserStakeLengthP90",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "_length",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getWithdrawRewardFlexiblePlanP",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "totalReward",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getWithdrawableRewardFixPlanP0",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "totalReward",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getWithdrawableRewardFixPlanP180",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "totalReward",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getWithdrawableRewardFixPlanP30",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "totalReward",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getWithdrawableRewardFixPlanP360",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "totalReward",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getWithdrawableRewardFixPlanP480",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "totalReward",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }],
-    "name": "getWithdrawableRewardFixPlanP90",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "totalReward",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_referer",
-        "type": "address"
-    }],
-    "name": "joinCommunity",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "owner",
-    "outputs": [{
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "processAutoUnlockedStakesIndexP",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "rewardSum",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "processAutoUnlockedStakesIndexP0",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "rewardSum",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "processAutoUnlockedStakesIndexP180",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "rewardSum",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "processAutoUnlockedStakesIndexP30",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "rewardSum",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "processAutoUnlockedStakesIndexP360",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "rewardSum",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "processAutoUnlockedStakesIndexP480",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "rewardSum",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "processAutoUnlockedStakesIndexP90",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "rewardSum",
-        "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "rebateContract",
-    "outputs": [{
-        "internalType": "contract IRebateContract",
-        "name": "",
-        "type": "address"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-    }],
-    "name": "serviceReward",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "token",
-    "outputs": [{
-        "internalType": "contract IERC20",
-        "name": "",
-        "type": "address"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-    }],
-    "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "unstakeFixPlanP0",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "unstakeFixPlanP180",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "unstakeFixPlanP30",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "unstakeFixPlanP360",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "unstakeFixPlanP480",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "unstakeFixPlanP90",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "_day",
-        "type": "uint256"
-    }],
-    "name": "unstakeFlexiblePlanP",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "userStakeDetailsFlexiblePlan",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "stakedAmount",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "stakeTimestamp",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "unStakeTimestamp",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "perStakeReward",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "perDayReward",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "getRewardDay",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "planDay",
-        "type": "uint256"
-    }, {
-        "internalType": "bool",
-        "name": "unstake",
-        "type": "bool"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "userStakeDetailsFlixPlan0",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "stakedAmount",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "stakeTimestamp",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "unStakeTimestamp",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "perStakeReward",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "planDay",
-        "type": "uint256"
-    }, {
-        "internalType": "bool",
-        "name": "unstake",
-        "type": "bool"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "userStakeDetailsFlixPlan180",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "stakedAmount",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "stakeTimestamp",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "unStakeTimestamp",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "perStakeReward",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "planDay",
-        "type": "uint256"
-    }, {
-        "internalType": "bool",
-        "name": "unstake",
-        "type": "bool"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "userStakeDetailsFlixPlan30",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "stakedAmount",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "stakeTimestamp",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "unStakeTimestamp",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "perStakeReward",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "planDay",
-        "type": "uint256"
-    }, {
-        "internalType": "bool",
-        "name": "unstake",
-        "type": "bool"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "userStakeDetailsFlixPlan360",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "stakedAmount",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "stakeTimestamp",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "unStakeTimestamp",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "perStakeReward",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "planDay",
-        "type": "uint256"
-    }, {
-        "internalType": "bool",
-        "name": "unstake",
-        "type": "bool"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "userStakeDetailsFlixPlan480",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "stakedAmount",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "stakeTimestamp",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "unStakeTimestamp",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "perStakeReward",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "planDay",
-        "type": "uint256"
-    }, {
-        "internalType": "bool",
-        "name": "unstake",
-        "type": "bool"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-    }, {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-    }],
-    "name": "userStakeDetailsFlixPlan90",
-    "outputs": [{
-        "internalType": "uint256",
-        "name": "stakedAmount",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "stakeTimestamp",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "unStakeTimestamp",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "perStakeReward",
-        "type": "uint256"
-    }, {
-        "internalType": "uint256",
-        "name": "planDay",
-        "type": "uint256"
-    }, {
-        "internalType": "bool",
-        "name": "unstake",
-        "type": "bool"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-}]
+[
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_Community",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_FlexiblePlan",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_FixPlan",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_FixPlan30",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_FixPlan90",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_FixPlan180",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_FixPlan360",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_FixPlan480",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_member",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_referer",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "time",
+                "type": "uint256"
+            }
+        ],
+        "name": "CreateAccount",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "previousOwner",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "OwnershipTransferred",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "totalReward",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "totalRewardOnetime",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "time",
+                "type": "uint256"
+            }
+        ],
+        "name": "TitleRewardClaimed",
+        "type": "event"
+    },
+    {
+        "inputs": [],
+        "name": "Community",
+        "outputs": [
+            {
+                "internalType": "contract ICommunity",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "FixPlan",
+        "outputs": [
+            {
+                "internalType": "contract IFixPlan",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "FixPlan180",
+        "outputs": [
+            {
+                "internalType": "contract IFixPlan180",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "FixPlan30",
+        "outputs": [
+            {
+                "internalType": "contract IFixPlan30",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "FixPlan360",
+        "outputs": [
+            {
+                "internalType": "contract IFixPlan360",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "FixPlan480",
+        "outputs": [
+            {
+                "internalType": "contract IFixPlan480",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "FixPlan90",
+        "outputs": [
+            {
+                "internalType": "contract IFixPlan90",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "FlexiblePlan",
+        "outputs": [
+            {
+                "internalType": "contract IFlexiblePlan",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_number",
+                "type": "uint256"
+            }
+        ],
+        "name": "claimFixPlan0",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_number",
+                "type": "uint256"
+            }
+        ],
+        "name": "claimFixPlan180",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_number",
+                "type": "uint256"
+            }
+        ],
+        "name": "claimFixPlan30",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_number",
+                "type": "uint256"
+            }
+        ],
+        "name": "claimFixPlan360",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_number",
+                "type": "uint256"
+            }
+        ],
+        "name": "claimFixPlan480",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_number",
+                "type": "uint256"
+            }
+        ],
+        "name": "claimFixPlan90",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_number",
+                "type": "uint256"
+            }
+        ],
+        "name": "claimFlexiblePlan",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "claimTitleRewardP",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "depositFixPlanP0",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "depositFixPlanP180",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "depositFixPlanP30",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "depositFixPlanP360",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "depositFixPlanP480",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "depositFixPlanP90",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "depositFlexiblePlanP",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getCurrentTitleRewardP",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "_rewardO",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_rewardCO",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_rewardA",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_rewardCA",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_rewardWO",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_rewardWA",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_rewardWT",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "level",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "getPeferralNodeAddress",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "_address",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "level",
+                "type": "uint256"
+            }
+        ],
+        "name": "getReferralCount",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "_count",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "level",
+                "type": "uint256"
+            }
+        ],
+        "name": "getReferralLevelUnLock",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "_bool",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "level",
+                "type": "uint256"
+            }
+        ],
+        "name": "getReferralLevelUnLockTime",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "_time",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getSelfRewardFromDownLinerFixPlan0",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "selfRewardDownLiner",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_currentTime",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getSelfRewardFromDownLinerFixPlan180",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "selfRewardDownLiner",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_currentTime",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getSelfRewardFromDownLinerFixPlan30",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "selfRewardDownLiner",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_currentTime",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getSelfRewardFromDownLinerFixPlan360",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "selfRewardDownLiner",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_currentTime",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getSelfRewardFromDownLinerFixPlan480",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "selfRewardDownLiner",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_currentTime",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getSelfRewardFromDownLinerFixPlan90",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "selfRewardDownLiner",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_currentTime",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getSelfRewardFromDownLinerFlexiblePlan",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "selfRewardDownLiner",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_currentTime",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getSelfRewardFromUpLinerFixPlan0",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "selfRewardUpLiner",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_currentTime",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getSelfRewardFromUpLinerFixPlan180",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "selfRewardUpLiner",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_currentTime",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getSelfRewardFromUpLinerFixPlan30",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "selfRewardUpLiner",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_currentTime",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getSelfRewardFromUpLinerFixPlan360",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "selfRewardUpLiner",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_currentTime",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getSelfRewardFromUpLinerFixPlan480",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "selfRewardUpLiner",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_currentTime",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getSelfRewardFromUpLinerFixPlan90",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "selfRewardUpLiner",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_currentTime",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getSelfRewardFromUpLinerFlexiblePlan",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "selfRewardUpLiner",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_currentTime",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getUplineLevelOpen",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "_uLevel",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "level",
+                "type": "uint256"
+            }
+        ],
+        "name": "getUplineLevelOpenBool",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "_isULevel",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "level",
+                "type": "uint256"
+            }
+        ],
+        "name": "getUplineLevelOpenTime",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "_time",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getUserDetailsP",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "referrerAddress",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalTeamMember",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "registrationTime",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalSelfDepositedAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalTeamMemberDeposit",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "titleLevel",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_titleId",
+                "type": "uint256"
+            }
+        ],
+        "name": "getUserRewardP",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "totalReward",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "isActive",
+                "type": "bool"
+            },
+            {
+                "internalType": "bool",
+                "name": "isClaim",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getUserStakeLengthP",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "_length",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getUserStakeLengthP0",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "_length",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getUserStakeLengthP180",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "_length",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getUserStakeLengthP30",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "_length",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getUserStakeLengthP360",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "_length",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getUserStakeLengthP480",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "_length",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getUserStakeLengthP90",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "_length",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getWithdrawRewardFlexiblePlanP",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "totalReward",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getWithdrawableRewardFixPlanP0",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "totalReward",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getWithdrawableRewardFixPlanP180",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "totalReward",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getWithdrawableRewardFixPlanP30",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "totalReward",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getWithdrawableRewardFixPlanP360",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "totalReward",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getWithdrawableRewardFixPlanP480",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "totalReward",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "getWithdrawableRewardFixPlanP90",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "totalReward",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "gettotalWithdraw180",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "totalRewardU",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalRewardD",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "gettotalWithdraw360",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "totalRewardU",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalRewardD",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "gettotalWithdraw480",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "totalRewardU",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalRewardD",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "gettotalWithdraw90",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "totalRewardU",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalRewardD",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "gettotalWithdrawP",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "totalRewardU",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalRewardD",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "gettotalWithdrawP0",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "totalRewardU",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalRewardD",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "gettotalWithdrawP30",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "totalRewardU",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalRewardD",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_referer",
+                "type": "address"
+            }
+        ],
+        "name": "joinCommunity",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "processAutoUnlockedStakesIndexP",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "rewardSum",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "processAutoUnlockedStakesIndexP0",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "rewardSum",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "processAutoUnlockedStakesIndexP180",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "rewardSum",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "processAutoUnlockedStakesIndexP30",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "rewardSum",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "processAutoUnlockedStakesIndexP360",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "rewardSum",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "processAutoUnlockedStakesIndexP480",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "rewardSum",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "processAutoUnlockedStakesIndexP90",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "rewardSum",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "renounceOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "transferOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "unstakeFixPlanP0",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "unstakeFixPlanP180",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "unstakeFixPlanP30",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "unstakeFixPlanP360",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "unstakeFixPlanP480",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "unstakeFixPlanP90",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "unstakeFlexiblePlanP",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "userStakeDetailsFlexiblePlan",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "stakedAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "stakeTimestamp",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "unStakeTimestamp",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "perStakeReward",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "unstake",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "userStakeDetailsFlixPlan0",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "stakedAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "stakeTimestamp",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "unStakeTimestamp",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "perStakeReward",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "planDay",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "unstake",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "userStakeDetailsFlixPlan180",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "stakedAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "stakeTimestamp",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "unStakeTimestamp",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "perStakeReward",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "planDay",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "unstake",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "userStakeDetailsFlixPlan30",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "stakedAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "stakeTimestamp",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "unStakeTimestamp",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "perStakeReward",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "planDay",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "unstake",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "userStakeDetailsFlixPlan360",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "stakedAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "stakeTimestamp",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "unStakeTimestamp",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "perStakeReward",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "planDay",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "unstake",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "userStakeDetailsFlixPlan480",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "stakedAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "stakeTimestamp",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "unStakeTimestamp",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "perStakeReward",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "planDay",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "unstake",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "userStakeDetailsFlixPlan90",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "stakedAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "stakeTimestamp",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "unStakeTimestamp",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "perStakeReward",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "planDay",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "unstake",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
+]

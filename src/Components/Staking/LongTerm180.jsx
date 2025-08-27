@@ -22,6 +22,8 @@ import {
 } from "../../Services/FixPlan180Instant";
 import { connectWallet, getExistingConnection, ensureChain } from "../../Services/contract";
 import { fetchUSDTMeta, fetchUSDTBalance, formatUnits } from "../../Services/USDTInstant";
+import { getTeamHistoryByLevel } from "../../Services/planInstant";
+import TeamLevelTable from "./common/TeamLevelTable";
 
 // ---- constants / helpers ----
 const ZERO = "0x0000000000000000000000000000000000000000";
@@ -50,6 +52,9 @@ const Flexible = () => {
   const [claiming, setClaiming] = useState(false);
   const [unstakeIndex, setUnstakeIndex] = useState("");
   const [unstaking, setUnstaking] = useState(false);
+
+  const [viewMode, setViewMode] = useState("self");      // 'self' | 'team'
+  const [teamRefreshTick, setTeamRefreshTick] = useState(0);
 
   // pagination
   const PAGE_SIZE = 10;
@@ -176,36 +181,80 @@ const Flexible = () => {
     }
   };
 
+
   const refreshDashboardStats = async (addr = account) => {
-    if (!addr) {
-      setWithdrawableRaw("0");
-      setUplinerLevelOpen(0);
-      setUplinerRewardRaw("0");
-      setDownlinerRewardRaw("0");
-      setUnlockedLevels(0);
-      return;
-    }
-    try {
-      await ensureChain("bscTestnet");
-      const safe = async (fn, fb) => { try { return await fn(); } catch { return fb; } };
-      const withdrawable = await getWithdrawRewardFixPlanP(addr);
-      const openLevel    = await safe(() => getUplineLevelOpen(addr), 0);
-      const uplReward    = await safe(() => getSelfRewardFromUpLinerFixPlan(addr), "0");
-      const downReward   = await safe(() => getSelfRewardFromDownLinerFixPlan(addr), "0");
-      const unlockBools  = await Promise.all(
-        Array.from({ length: 10 }, (_, i) => getReferralLevelUnLock(addr, i).catch(() => false))
-      );
-      console.log("dashboard", { withdrawable, openLevel, uplReward, downReward, unlockBools });
-      
-      setWithdrawableRaw(String(withdrawable || "0"));
-      setUplinerLevelOpen(Number(openLevel || 0));
-      setUplinerRewardRaw(String(uplReward || "0"));
-      setDownlinerRewardRaw(String(downReward || "0"));
-      setUnlockedLevels(unlockBools.filter(Boolean).length);
-    } catch (e) {
-      console.warn("refreshDashboardStats error:", e);
-    }
-  };
+      if (!addr) {
+        setWithdrawableRaw("0");
+        setUplinerLevelOpen(0);
+        setUplinerRewardRaw("0");
+        setDownlinerRewardRaw("0");
+        setUnlockedLevels(0);
+        return;
+      }
+  
+      try {
+        await ensureChain("bscTestnet");
+  
+        const safe = async (fn, fb) => {
+          try { return await fn(); } catch { return fb; }
+        };
+  
+        const [withdrawable, openLevel, uplReward, downReward, unlockBools] = await Promise.all([
+          safe(() => getWithdrawRewardFixPlanP(addr), "0"),
+          safe(() => getUplineLevelOpen(addr), 0),
+          safe(() => getSelfRewardFromUpLinerFixPlan(addr), "0"),
+          safe(() => getSelfRewardFromDownLinerFixPlan(addr), "0"),
+          Promise.all(
+            Array.from({ length: 10 }, (_, i) =>
+              getReferralLevelUnLock(addr, i).catch(() => false)
+            )
+          ),
+        ]);
+  
+        console.log("dashboard", { withdrawable, openLevel, uplReward, downReward, unlockBools });
+  
+        setWithdrawableRaw(String(withdrawable ?? "0"));
+        setUplinerLevelOpen(Number(openLevel || 0));
+        setUplinerRewardRaw(String(uplReward ?? "0"));
+        setDownlinerRewardRaw(String(downReward ?? "0"));
+        setUnlockedLevels((unlockBools || []).filter(Boolean).length);
+      } catch (e) {
+        console.warn("refreshDashboardStats error:", e);
+      }
+    };
+
+
+
+  // const refreshDashboardStats = async (addr = account) => {
+  //   if (!addr) {
+  //     setWithdrawableRaw("0");
+  //     setUplinerLevelOpen(0);
+  //     setUplinerRewardRaw("0");
+  //     setDownlinerRewardRaw("0");
+  //     setUnlockedLevels(0);
+  //     return;
+  //   }
+  //   try {
+  //     await ensureChain("bscTestnet");
+  //     const safe = async (fn, fb) => { try { return await fn(); } catch { return fb; } };
+  //     const withdrawable = await getWithdrawRewardFixPlanP(addr);
+  //     const openLevel = await safe(() => getUplineLevelOpen(addr), 0);
+  //     const uplReward = await safe(() => getSelfRewardFromUpLinerFixPlan(addr), "0");
+  //     const downReward = await safe(() => getSelfRewardFromDownLinerFixPlan(addr), "0");
+  //     const unlockBools = await Promise.all(
+  //       Array.from({ length: 10 }, (_, i) => getReferralLevelUnLock(addr, i).catch(() => false))
+  //     );
+  //     console.log("dashboard", { withdrawable, openLevel, uplReward, downReward, unlockBools });
+
+  //     setWithdrawableRaw(String(withdrawable || "0"));
+  //     setUplinerLevelOpen(Number(openLevel || 0));
+  //     setUplinerRewardRaw(String(uplReward || "0"));
+  //     setDownlinerRewardRaw(String(downReward || "0"));
+  //     setUnlockedLevels(unlockBools.filter(Boolean).length);
+  //   } catch (e) {
+  //     console.warn("refreshDashboardStats error:", e);
+  //   }
+  // };
 
   // ---- actions ----
   const handleConnect = async () => {
@@ -279,32 +328,32 @@ const Flexible = () => {
 
   // Day button => directly unstake with selected day
   const handleUnstake = async () => {
-  try {
-    if (!account) throw new Error("Please connect your wallet first.");
-    if (!isValidAddress(account)) throw new Error("Invalid address");
-    const idx = Number(unstakeIndex);
-    if (!Number.isInteger(idx) || idx < 0) throw new Error("Enter a valid stake index.");
+    try {
+      if (!account) throw new Error("Please connect your wallet first.");
+      if (!isValidAddress(account)) throw new Error("Invalid address");
+      const idx = Number(unstakeIndex);
+      if (!Number.isInteger(idx) || idx < 0) throw new Error("Enter a valid stake index.");
 
-    const count = await getUserStakeLength(account);
-    if (idx >= count) throw new Error(`Index out of range (0..${Math.max(0, count - 1)})`);
+      const count = await getUserStakeLength(account);
+      if (idx >= count) throw new Error(`Index out of range (0..${Math.max(0, count - 1)})`);
 
-    setUnstaking(true);
-    setTxMsg("Unstaking…");
-    const receipt = await unstakeFixPlanP180({ from: account, index: idx, chainKey: "bscTestnet" });
-    setTxMsg(`Unstake success: ${receipt?.transactionHash || ""}`);
+      setUnstaking(true);
+      setTxMsg("Unstaking…");
+      const receipt = await unstakeFixPlanP180({ from: account, index: idx, chainKey: "bscTestnet" });
+      setTxMsg(`Unstake success: ${receipt?.transactionHash || ""}`);
 
-    await Promise.all([
-      refreshMetaAndBalance(account),
-      refreshDashboardStats(account),
-      refreshHistory(),
-    ]);
-  } catch (e) {
-    console.error(e);
-    alert(e?.message || "Unstake failed.");
-    setTxMsg(`Unstake failed: ${e?.message || e}`);
-  } finally {
-    setUnstaking(false);
-  }
+      await Promise.all([
+        refreshMetaAndBalance(account),
+        refreshDashboardStats(account),
+        refreshHistory(),
+      ]);
+    } catch (e) {
+      console.error(e);
+      alert(e?.message || "Unstake failed.");
+      setTxMsg(`Unstake failed: ${e?.message || e}`);
+    } finally {
+      setUnstaking(false);
+    }
   };
 
   const displayBalance = formatUnits(rawBalance, tokenDecimals, 6);
@@ -315,13 +364,40 @@ const Flexible = () => {
   return (
     <div className="Flexible">
       <Header />
-      <div className="container-fluid">
+      <div className="container">
         <div className="row g-3">
-          <div className="col-12">
+          <div className="col-12 d-flex justify-content-between">
             <div className="heading">
               Flix Plan-180 Staking{" "}
               <span><i className="fa-solid fa-circle-question"></i></span>
             </div>
+            <button
+              className="zv-cta zv-cta--sm"
+              onClick={async () => {
+                if (!account) return;
+                try {
+                  setRefreshing(true);
+                  await ensureChain("bscTestnet");
+                  if (viewMode === "self") {
+                    await Promise.all([
+                      refreshHistory(),
+                      refreshDashboardStats(account),
+                      refreshMetaAndBalance(account),
+                    ]);
+                  } else {
+                    // Team view: just ping the reusable table to reload
+                    setTeamRefreshTick((t) => t + 1);
+                    await refreshDashboardStats(account);
+                  }
+                } finally {
+                  setRefreshing(false);
+                }
+              }}
+              disabled={!account || refreshing}
+              title="Refresh history & rewards"
+            >
+              {refreshing ? "Refreshing…" : "Refresh"}
+            </button>
           </div>
         </div>
       </div>
@@ -347,7 +423,7 @@ const Flexible = () => {
                 <div className="tab-content" id="myTabContent">
                   {/* Stake tab */}
                   <div className="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabIndex={0}>
-                    <div className="card">
+                    <div className="card w-100">
                       <div className="custom-flex">
                         <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                           <img src="https://akasdao.com/img/common/computed.svg" alt="calc" />
@@ -359,7 +435,7 @@ const Flexible = () => {
                       <div className="input-group mb-3">
                         <input
                           type="text"
-                          className="form-control"
+                          className="form-control text-white"
                           placeholder={`Enter amount in ${tokenSymbol}`}
                           aria-label="amount"
                           aria-describedby="basic-addon2"
@@ -398,38 +474,38 @@ const Flexible = () => {
 
                       {/* Rewards + claim */}
                       <ul className="list-flex">
-                        <li>
+                        {/* <li className="justify-content-between d-flex">
                           <h6>Self Reward</h6>
                           <p className="d-flex align-items-center gap-2">
                             {withdrawableFmt} {tokenSymbol}
-                            <button className="zv-cta zv-cta--sm" disabled={claiming} onClick={() => handleClaim(1)}>
-                              Claim
-                            </button>
                           </p>
-                        </li>
-                        <li>
+                          <button className="zv-cta zv-cta--sm" disabled={claiming} onClick={() => handleClaim(1)}>
+                            Claim
+                          </button>
+                        </li> */}
+                        <li className="justify-content-between d-flex">
                           <h6>Upline Reward</h6>
                           <p className="d-flex align-items-center gap-2">
                             {uplinerRewardFmt} {tokenSymbol}
-                            <button className="zv-cta zv-cta--sm" disabled={claiming} onClick={() => handleClaim(2)}>
-                              Claim
-                            </button>
                           </p>
+                          <button className="zv-cta zv-cta--sm" disabled={claiming} onClick={() => handleClaim(3)}>
+                            Claim
+                          </button>
                         </li>
-                        <li>
+                        <li className="justify-content-between d-flex">
                           <h6>Downline Reward</h6>
                           <p className="d-flex align-items-center gap-2">
                             {downlinerRewardFmt} {tokenSymbol}
-                            <button className="zv-cta zv-cta--sm" disabled={claiming} onClick={() => handleClaim(3)}>
-                              Claim
-                            </button>
                           </p>
+                          <button className="zv-cta zv-cta--sm" disabled={claiming} onClick={() => handleClaim(2)}>
+                            Claim
+                          </button>
                         </li>
-                        <li>
+                        <li className="justify-content-between d-flex">
                           <h6>Upline Open Level</h6>
                           <p>{uplinerLevelOpen}</p>
                         </li>
-                        <li>
+                        <li className="justify-content-between d-flex">
                           <h6>Unlocked Referral Levels (0–10)</h6>
                           <p>{unlockedLevels} / 10</p>
                         </li>
@@ -439,7 +515,7 @@ const Flexible = () => {
 
                   {/* Unstake tab */}
                   <div className="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabIndex={0}>
-                    <div className="card">
+                    <div className="card w-100">
                       <div className="custom-flex">
                         <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                           <img src="https://akasdao.com/img/common/computed.svg" alt="calc" />
@@ -449,28 +525,28 @@ const Flexible = () => {
 
                       {/* Index input */}
                       <div className="row g-2">
-                        <div className="col-md-6">
+                        <div className="col-md-12">
                           <label className="form-label">Stake Index</label>
                           <input
                             type="number"
                             min="0"
                             inputMode="numeric"
-                            className="form-control"
+                            className="form-control bg-transparent text-white form-custom"
                             placeholder="Enter stake index (0, 1, 2...)"
                             value={unstakeIndex}
                             onChange={(e) => setUnstakeIndex(e.target.value.replace(/[^\d]/g, ""))}
                           />
                         </div>
-                        <div className="col-md-6 d-flex align-items-end">
-                          <button
-                            type="button"
-                            className="zv-cta zv-cta--sm"
-                            onClick={handleUnstake}
-                            disabled={unstaking || !unstakeIndex || !account}
-                          >
-                            {unstaking ? "Unstaking…" : "Unstake"}
-                          </button>
-                        </div>
+                      </div>
+                      <div className="mx-auto mt-3">
+                        <button
+                          type="button"
+                          className="zv-cta zv-cta--sm"
+                          onClick={handleUnstake}
+                          disabled={unstaking || !unstakeIndex || !account}
+                        >
+                          {unstaking ? "Unstaking…" : "Unstake"}
+                        </button>
                       </div>
 
                       {/* <div className="custom-flex mt-3">
@@ -503,38 +579,107 @@ const Flexible = () => {
           <div className="row">
             <div className="col-md-12">
               <div className="head d-flex justify-content-between align-items-center">
-                <h2 className="m-0">Transaction History</h2>
-                <button
-                    className="btn btn-outline-primary btn-sm"
-                    onClick={async () => {
-                      if (!account) return;
-                      try {
-                        setRefreshing(true);               // show spinner for the whole refresh
-                        await ensureChain("bscTestnet");
-                        await Promise.all([
-                          refreshHistory(),                // table + per-row rewards
-                          refreshDashboardStats(account),  // Self/Upline/Downline + levels
-                          refreshMetaAndBalance(account),  // (optional) wallet balance
-                        ]);
-                      } finally {
-                        setRefreshing(false);
-                      }
-                    }}
+               <h2 className="m-0"> {viewMode === "team" ? "Team History" : "Stake History"}</h2>
+                <div className="d-flex gap-2">
+                  <button
+                    className={`zv-cta zv-cta--sm ${viewMode === "team" ? "warning" : "outline-warning"}`}
+                    style={{ width: "200px" }}
+                    onClick={() => setViewMode(viewMode === "team" ? "self" : "team")}
                     disabled={!account || refreshing}
-                    title="Refresh history & rewards"
+                    title="Toggle Team/Self view"
                   >
-                    {refreshing ? "Refreshing…" : "Refresh"}
+                    {viewMode === "team" ? "Self" : "Team"}
                   </button>
+                </div>
               </div>
-              <div className="table-responsive mt-2">
+
+              {viewMode === "team" ? (
+                // --- TEAM LEVEL TABLE (reusable) ---
+                <TeamLevelTable
+                  account={account}
+                  tokenSymbol={tokenSymbol}
+                  tokenDecimals={tokenDecimals}
+                  fetchRows={getTeamHistoryByLevel}   // must return: [{ address, totalSelfDepositedAmount, totalTeamMember?, index? }, ...]
+                  initialLevel={1}
+                  pageSize={10}
+                  showTeamCount={true}
+                  refreshSignal={teamRefreshTick}
+                />
+              ) : (
+                // --- SELF HISTORY TABLE (existing) ---
+                <>
+                  <div className="table-responsive mt-2">
+                    <table className="table table-hover align-middle">
+                      <thead className="table-dark">
+                        <tr>
+                          <th style={{ whiteSpace: "nowrap" }}>#</th>
+                          <th style={{ whiteSpace: "nowrap" }}>Stake Time</th>
+                          <th style={{ whiteSpace: "nowrap" }}>Staked Amount ({tokenSymbol})</th>
+                          <th style={{ whiteSpace: "nowrap" }}>Reward ({tokenSymbol})</th>
+                          <th style={{ whiteSpace: "nowrap" }}>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {pageRows.length === 0 ? (
+                          <tr>
+                            <td colSpan="5" className="text-center py-4">
+                              {account ? "No stakes found." : "Connect wallet to see history."}
+                            </td>
+                          </tr>
+                        ) : (
+                          pageRows.map((r) => (
+                            <tr key={r.index}>
+                              <td>{r.index}</td>
+                              <td>
+                                <div className="fw-semibold">{r.tsHuman}</div>
+                                <div className="text-muted" style={{ fontSize: 12 }}>
+                                  {r.ts ? `(${r.ts})` : "-"}
+                                </div>
+                              </td>
+                              <td className="fw-semibold">{r.amountFmt}</td>
+                              <td className="fw-semibold">{r.rewardFmt}</td>
+                              <td>
+                                {r.isUnstaked ? (
+                                  <span className="badge bg-secondary">Unstaked</span>
+                                ) : (
+                                  <span className="zv-cta zv-cta--sm outline-warning">Staked</span>
+                                )}
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="d-flex justify-content-end align-items-center gap-2">
+                    <button
+                      className="btn btn-sm btn-secondary"
+                      onClick={() => setPage((p) => Math.max(1, p - 1))}
+                      disabled={page <= 1}
+                    >
+                      ‹ Prev
+                    </button>
+                    <span className="px-2 referral-input">Page {page} / {totalPages}</span>
+                    <button
+                      className="btn btn-sm btn-secondary referral-input"
+                      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                      disabled={page >= totalPages}
+                    >
+                      Next ›
+                    </button>
+                  </div>
+                </>
+              )}
+              {/* <div className="table-responsive mt-2">
                 <table className="table table-hover align-middle">
                   <thead className="table-dark">
                     <tr>
-                      <th style={{whiteSpace:"nowrap"}}>#</th>
-                      <th style={{whiteSpace:"nowrap"}}>Stake Time</th>
-                      <th style={{whiteSpace:"nowrap"}}>Staked Amount ({tokenSymbol})</th>
-                      <th style={{whiteSpace:"nowrap"}}>Reward ({tokenSymbol})</th>
-                      <th style={{whiteSpace:"nowrap"}}>Status</th>
+                      <th style={{ whiteSpace: "nowrap" }}>#</th>
+                      <th style={{ whiteSpace: "nowrap" }}>Stake Time</th>
+                      <th style={{ whiteSpace: "nowrap" }}>Staked Amount ({tokenSymbol})</th>
+                      <th style={{ whiteSpace: "nowrap" }}>Reward ({tokenSymbol})</th>
+                      <th style={{ whiteSpace: "nowrap" }}>Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -550,7 +695,7 @@ const Flexible = () => {
                           <td>{r.index}</td>
                           <td>
                             <div className="fw-semibold">{r.tsHuman}</div>
-                            <div className="text-muted" style={{fontSize:12}}>
+                            <div className="text-muted" style={{ fontSize: 12 }}>
                               {r.ts ? `(${r.ts})` : "-"}
                             </div>
                           </td>
@@ -578,7 +723,7 @@ const Flexible = () => {
                 <button className="btn btn-sm btn-secondary referral-input" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page >= totalPages}>
                   Next ›
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

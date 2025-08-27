@@ -5,8 +5,8 @@ import { getUSDTContract, fetchUSDTMeta } from "./USDTInstant";
 import planabi from "../abi/planabi.json";
 
 // ✅ Sirf BSC Testnet ka address rakho
-export const PLAN_CONTRACT_ADDRESS = "0x82dda9B71Fb07af73579C46C0b0468611D7575FD";
-export const FIX_PLAN0_ADDRESS = "0xfAe7CEc1f833F65FB86899Fabd49451e433fB2B4";
+export const PLAN_CONTRACT_ADDRESS = "0x97af7D3e3914A91c5781d0CE5B79D5b06d414C22";
+export const FIX_PLAN0_ADDRESS = "0xDcd41740DF47061Ef827Ca0B515D32e02d57bfa1";
 
 // ---- Unstake helpers ----
 export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
@@ -173,33 +173,59 @@ export async function getWithdrawRewardFixPlanP(user) {
 }
 
 export async function getSelfRewardFromUpLinerFixPlan(user, { chainKey = "bscTestnet" } = {}) {
-    await ensureChain(chainKey);
-    const c = getPlanContract();
-    let v;
-    try {
-        v = await c.methods.getSelfRewardFromUpLinerFixPlan0(user).call();
-    } catch {
-        // fallback if contract uses msg.sender (no arg)
-        try { v = await c.methods.getSelfRewardFromUpLinerFixPlan0().call({ from: user }); }
-        catch { v = "0"; }
-    }
-    const raw = (v && (v.reward ?? v.amount ?? v.value ?? v[0])) ?? v ?? "0";
-    return String(raw || "0");
+    // await ensureChain(chainKey);
+    // const c = getPlanContract();
+    // let v;
+    // try {
+    //     v = await c.methods.getSelfRewardFromUpLinerFixPlan0(user).call();
+    // } catch {
+    //     // fallback if contract uses msg.sender (no arg)
+    //     try { v = await c.methods.getSelfRewardFromUpLinerFixPlan0().call({ from: user }); }
+    //     catch { v = "0"; }
+    // }
+    // const raw = (v && (v.reward ?? v.amount ?? v.value ?? v[0])) ?? v ?? "0";
+    // return String(raw || "0");
+
+     if (!isValidAddress(user)) throw new Error("Invalid address");
+        await ensureChain("bscTestnet");
+        const c = getPlanContract();
+    
+        const v = await c.methods.getSelfRewardFromUpLinerFixPlan0(user).call();
+        const y = await c.methods.gettotalWithdrawP0(user).call();
+    
+        const total = BigInt(String(v?.[0] ?? v ?? 0));
+        const withdrawn = BigInt(String(y?.[0] ?? y ?? 0));
+        const diff = total > withdrawn ? (total - withdrawn) : 0n;
+    
+        return diff.toString();
 }
 
 export async function getSelfRewardFromDownLinerFixPlan(user, { chainKey = "bscTestnet" } = {}) {
-    await ensureChain(chainKey);
-    const c = getPlanContract();
-    let v;
-    try {
-        v = await c.methods.getSelfRewardFromDownLinerFixPlan0(user).call();
-    } catch {
-        // fallback if contract uses msg.sender (no arg)
-        try { v = await c.methods.getSelfRewardFromDownLinerFixPlan0().call({ from: user }); }
-        catch { v = "0"; }
-    }
-    const raw = (v && (v.reward ?? v.amount ?? v.value ?? v[0])) ?? v ?? "0";
-    return String(raw || "0");
+    // await ensureChain(chainKey);
+    // const c = getPlanContract();
+    // let v;
+    // try {
+    //     v = await c.methods.getSelfRewardFromDownLinerFixPlan0(user).call();
+    // } catch {
+    //     // fallback if contract uses msg.sender (no arg)
+    //     try { v = await c.methods.getSelfRewardFromDownLinerFixPlan0().call({ from: user }); }
+    //     catch { v = "0"; }
+    // }
+    // const raw = (v && (v.reward ?? v.amount ?? v.value ?? v[0])) ?? v ?? "0";
+    // return String(raw || "0");
+
+    if (!isValidAddress(user)) throw new Error("Invalid address");
+        await ensureChain("bscTestnet");
+        const c = getPlanContract();
+    
+        const v = await c.methods.getSelfRewardFromDownLinerFixPlan0(user).call();
+        const y = await c.methods.gettotalWithdrawP0(user).call();
+    
+        const total = BigInt(String(v?.[0] ?? v ?? 0));
+        const withdrawn = BigInt(String(y?.[1] ?? y ?? 0));
+        const diff = total > withdrawn ? (total - withdrawn) : 0n;
+    
+        return diff.toString();
 }
 
 export const CLAIM_TYPES = {

@@ -5,8 +5,8 @@ import { getUSDTContract, fetchUSDTMeta } from "./USDTInstant";
 import planabi from "../abi/planabi.json";
 
 // ✅ Sirf BSC Testnet ka address rakho
-export const PLAN_CONTRACT_ADDRESS = "0x82dda9B71Fb07af73579C46C0b0468611D7575FD";
-export const FLEXIBLE_PLAN_ADDRESS = "0xD9D906666a1c450c6859F778aE504A05BF48B728";
+export const PLAN_CONTRACT_ADDRESS = "0x97af7D3e3914A91c5781d0CE5B79D5b06d414C22";
+export const FLEXIBLE_PLAN_ADDRESS = "0x64D632cc3a438d4f5967df560b5c5eE85c2221aa";
 
 // ---- Unstake helpers ----
 export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
@@ -18,18 +18,19 @@ export function isValidAddress(addr) {
     } catch { return false; }
 }
 
-export function assertAllowedUnstakeDay(day) {
-    const d = Number(day);
-    if (!ALLOWED_UNSTAKE_DAYS.includes(d)) {
-        throw new Error("Day must be one of 5, 10, 15, or 20.");
-    }
-    return d;
-}
+// export function assertAllowedUnstakeDay(day) {
+//     const d = Number(day);
+//     if (!ALLOWED_UNSTAKE_DAYS.includes(d)) {
+//         throw new Error("Day must be one of 5, 10, 15, or 20.");
+//     }
+//     return d;
+// }
 
 export function getPlanContract() {
     const provider = getProvider();
     if (!provider) throw new Error("No crypto wallet found. Please install MetaMask.");
     const web3 = new Web3(provider);
+    console.log("web3web3web3web3", new web3.eth.Contract(planabi, PLAN_CONTRACT_ADDRESS))
     return new web3.eth.Contract(planabi, PLAN_CONTRACT_ADDRESS);
 }
 
@@ -45,6 +46,156 @@ export async function getUserDetails(user, { chainKey = "bscTestnet" } = {}) {
     const contract = getPlanContract();
     return await contract.methods.getUserDetailsP(user).call();
 }
+
+// export async function getTeamHistoryByLevel(user, level) {
+//     await ensureChain(chainKey);
+//     const contract = getPlanContract();
+//     const n = await contract.methods.getReferralCount(user, level).call();
+//     for (i = 0; i < n; n++) {
+//       let teamAddress =  await contract.methods.getPeferralNodeAddress(user, level, i).call();
+//       let levelInfo = await contract.methods.getUserDetailsP(teamAddress).call();
+//       console.log("levelInfolevelInfo",levelInfo)
+//     //   return
+
+//     }
+// }
+
+
+// Services/planInstant.js
+// export async function getTeamHistoryByLevel(user, level, { chainKey = "bscTestnet" } = {}) {
+//     if (!user) throw new Error("Missing user");
+//     const L = Number(level);
+//     if (!Number.isInteger(L) || L < 1 || L > 10) throw new Error("Level must be 1..10");
+
+//     await ensureChain(chainKey);
+//     const c = getPlanContract();
+
+//     const L0 = L - 1; // many contracts are 0-based for counts
+//     const n = Number(await c.methods.getReferralCount(user, L0).call({ from: user })) || 0;
+
+//     const getNode = c.methods.getPeferralNodeAddress || c.methods.getReferralNodeAddress;
+//     if (!getNode) throw new Error("Referral node address method not found");
+
+//     const ZERO = "0x0000000000000000000000000000000000000000";
+//     const rows = [];
+
+//     for (let i = 0; i < n; i++) {
+//         let addr;
+//         try {
+//             // try 0-based level
+//             addr = await getNode(user, L0, i).call({ from: user });
+//         } catch {
+//             // fallback: some contracts expect 1-based level here
+//             try { addr = await getNode(user, L, i).call({ from: user }); } catch { addr = null; }
+//         }
+//         if (!addr || addr === ZERO) continue;
+
+//         let info = null;
+//         try {
+//             info = await c.methods.getUserDetailsP(addr).call({ from: user });
+//         } catch { }
+
+//         const raw =
+//             info?.totalSelfDepositedAmount ??
+//             info?.selfDeposit ??
+//             info?.totalDeposit ??
+//             info?.[3] ?? // common slot for self deposit in tuple
+//             0n;
+
+//         const deposit = typeof raw === "bigint" ? raw.toString() : String(raw);
+
+//         rows.push({
+//             index: i + 1,                               // 1-based row index for the table
+//             address: addr,                              // member address
+//             totalSelfDepositedAmount: deposit,          // raw wei-like string
+//         });
+//     }
+
+//     // return array of { index, address, totalSelfDepositedAmount }
+//     return rows;
+// }
+
+
+export async function getTeamHistoryByLevel(user, level, { chainKey = "bscTestnet" } = {}) {
+    if (!user) throw new Error("Missing user");
+    const L = Number(level);
+    if (!Number.isInteger(L) || L < 1 || L > 10) throw new Error("Level must be 1..10");
+
+    await ensureChain(chainKey);
+    const contract = getPlanContract();
+
+    const L0 = L - 1;
+    const n = Number(await contract.methods.getReferralCount(user, L0).call()) || 0;
+
+    const members = [];
+    for (let i = 0; i < n; i++) {
+        const addr = await contract.methods.getPeferralNodeAddress(user, L0, i).call();
+        if (!addr || addr === "0x0000000000000000000000000000000000000000") continue;
+
+        const info = await contract.methods.getUserDetailsP(addr).call();
+
+        // self deposit (prefer named prop then tuple slot [3])
+        const selfRaw = (info?.totalSelfDepositedAmount ?? info?.[3] ?? 0n);
+        const selfVal = BigInt(String(selfRaw));
+
+        // that user's total team count (prefer named prop then tuple slot [4])
+        const teamCntRaw = (info?.totalTeamMember ?? info?.[4] ?? 0n);
+        const teamCnt = Number(BigInt(String(teamCntRaw))); // small enough to fit in Number
+
+        members.push({
+            index: i + 1,
+            address: addr,
+            totalSelfDepositedAmount: selfVal.toString(), // raw string
+            totalTeamMember: teamCnt,                      // number
+        });
+    }
+
+    return members; // [{ index, address, totalSelfDepositedAmount, totalTeamMember }]
+}
+
+
+
+
+// export async function getTeamHistoryByLevel(user, level, { chainKey = "bscTestnet" } = {}) {
+//     console.log("user, level", user, level)
+//     await ensureChain(chainKey);
+//     console.log("await ensureChain(chainKey)", await ensureChain(chainKey))
+//     const contract = getPlanContract();
+//     console.log("contractcontract", contract)
+
+//     let totalTeamMember = 0;
+//     let totalSelfDepositedAmount = BigInt(0);
+
+//     const L0 = level - 1;
+//     console.log("check l0", L0)
+//     const n = await contract.methods.getReferralCount(user, L0).call();
+//     console.log("levelInfo at getrefferalcount", n, user, L0);
+
+//     for (let i = 0; i < n; i++) {
+//         const teamAddress = await contract.methods.getPeferralNodeAddress(user, L0, i).call();
+//         console.log("levelInfo of team member team add", teamAddress);
+
+//         const levelInfo = await contract.methods.getUserDetailsP(teamAddress).call();
+//         console.log("levelInfo of team member", levelInfo);
+
+//         totalTeamMember++;
+
+//         if (levelInfo?.totalSelfDepositedAmount) {
+//             totalSelfDepositedAmount += BigInt(levelInfo.totalSelfDepositedAmount);
+//         }
+//         // totalSelfDepositedAmount++;
+//         // assuming levelInfo.stakedAmount (or similar) holds user’s deposited tokens
+//         // if (levelInfo?.stakedAmount) {
+//         //     totalSelfDepositedAmount += BigInt(levelInfo.stakedAmount);
+//         // }
+//     }
+
+//     return {
+//         totalTeamMember,
+//         totalSelfDepositedAmount: totalSelfDepositedAmount.toString(),
+//     };
+// }
+
 
 export async function getReferralCount(user, level = 0, { chainKey = "bscTestnet" } = {}) {
     await ensureChain(chainKey);
@@ -172,34 +323,68 @@ export async function getWithdrawRewardFlexiblePlanP(user) {
     return toUintString(v);
 }
 
-export async function getSelfRewardFromUpLinerFlexiblePlan(user, { chainKey = "bscTestnet" } = {}) {
-    await ensureChain(chainKey);
+
+// export async function getSelfRewardFromUpLinerFlexiblePlan(user) {
+//     if (!isValidAddress(user)) throw new Error("Invalid address");
+//     await ensureChain("bscTestnet");
+//     const c = getPlanContract();
+
+//     const v = await c.methods.getSelfRewardFromUpLinerFlexiblePlan(user).call();
+//     const y = await c.methods.gettotalWithdrawP(user).call();
+//     console.log("v is the value", v, y)
+
+//     const total = BigInt(String(v?.[0] ?? v ?? 0));
+//     const withdrawn = BigInt(String(y?.[0] ?? y ?? 0));
+
+//     let calucale = total - withdrawn;
+//     console.log("calucalecalucale", calucale);
+
+//     return calucale.toString();
+
+// }
+
+export async function getSelfRewardFromUpLinerFlexiblePlan(user) {
+    if (!isValidAddress(user)) throw new Error("Invalid address");
+    await ensureChain("bscTestnet");
     const c = getPlanContract();
-    let v;
-    try {
-        v = await c.methods.getSelfRewardFromUpLinerFlexiblePlan(user).call();
-    } catch {
-        // fallback if contract uses msg.sender (no arg)
-        try { v = await c.methods.getSelfRewardFromUpLinerFlexiblePlan().call({ from: user }); }
-        catch { v = "0"; }
-    }
-    const raw = (v && (v.reward ?? v.amount ?? v.value ?? v[0])) ?? v ?? "0";
-    return String(raw || "0");
+
+    const v = await c.methods.getSelfRewardFromUpLinerFlexiblePlan(user).call();
+    const y = await c.methods.gettotalWithdrawP(user).call();
+
+    const total = BigInt(String(v?.[0] ?? v ?? 0));
+    const withdrawn = BigInt(String(y?.[0] ?? y ?? 0));
+    const diff = total > withdrawn ? (total - withdrawn) : 0n;
+
+    return diff.toString();
 }
 
+
 export async function getSelfRewardFromDownLinerFlexiblePlan(user, { chainKey = "bscTestnet" } = {}) {
-    await ensureChain(chainKey);
+    // await ensureChain(chainKey);
+    // const c = getPlanContract();
+    // let v;
+    // try {
+    //     v = await c.methods.getSelfRewardFromDownLinerFlexiblePlan(user).call();
+    // } catch {
+    //     // fallback if contract uses msg.sender (no arg)
+    //     try { v = await c.methods.getSelfRewardFromDownLinerFlexiblePlan().call({ from: user }); }
+    //     catch { v = "0"; }
+    // }
+    // const raw = (v && (v.reward ?? v.amount ?? v.value ?? v[0])) ?? v ?? "0";
+    // return String(raw || "0");
+
+    if (!isValidAddress(user)) throw new Error("Invalid address");
+    await ensureChain("bscTestnet");
     const c = getPlanContract();
-    let v;
-    try {
-        v = await c.methods.getSelfRewardFromDownLinerFlexiblePlan(user).call();
-    } catch {
-        // fallback if contract uses msg.sender (no arg)
-        try { v = await c.methods.getSelfRewardFromDownLinerFlexiblePlan().call({ from: user }); }
-        catch { v = "0"; }
-    }
-    const raw = (v && (v.reward ?? v.amount ?? v.value ?? v[0])) ?? v ?? "0";
-    return String(raw || "0");
+
+    const v = await c.methods.getSelfRewardFromDownLinerFlexiblePlan(user).call();
+    const y = await c.methods.gettotalWithdrawP(user).call();
+
+    const total = BigInt(String(v?.[0] ?? v ?? 0));
+    const withdrawn = BigInt(String(y?.[1] ?? y ?? 0));
+    const diff = total > withdrawn ? (total - withdrawn) : 0n;
+
+    return diff.toString();
 }
 
 export const CLAIM_TYPES = {
@@ -228,13 +413,24 @@ export const claim = {
     upline: (opts) => claimFlexiblePlan(CLAIM_TYPES.UPLINER, opts),
 };
 
-export async function unstakeFlexiblePlanP({ from, index, days, chainKey = "bscTestnet" } = {}) {
+export async function unstakeFlexiblePlanP({ from, index, chainKey = "bscTestnet" } = {}) {
+    // await ensureChain(chainKey);
+    // if (!isValidAddress(from)) throw new Error("Invalid address");
+    // const i = Number(index);
+    // if (!Number.isInteger(i) || i < 0) throw new Error("Invalid index");
+    // // const d = assertAllowedUnstakeDay(); // 5,10,15,20 only
+
+    // const c = getPlanContract();
+    // return await c.methods.unstakeFlexiblePlanP(i).send({ from });
+
     await ensureChain(chainKey);
     if (!isValidAddress(from)) throw new Error("Invalid address");
     const i = Number(index);
+    console.log("iiii", i)
     if (!Number.isInteger(i) || i < 0) throw new Error("Invalid index");
-    const d = assertAllowedUnstakeDay(days); // 5,10,15,20 only
 
     const c = getPlanContract();
-    return await c.methods.unstakeFlexiblePlanP(i, d).send({ from });
+    console.log("iiii", i)
+    // Contract now expects only (index)
+    return await c.methods.unstakeFlexiblePlanP(i).send({ from });
 }
