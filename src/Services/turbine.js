@@ -4,7 +4,7 @@ import { getProvider, ensureChain } from "./contract";
 import turbineAbi from "../abi/Turbine.json";
 
 // BSC Testnet address (replace if needed)
-export const TURBINE_CONTRACT_ADDRESS = "0x872F1926a75D977C5B0A4e70F790b9880A63c765";
+export const TURBINE_CONTRACT_ADDRESS = "0x683a06777546ABd48619325334609023397d8ADF";
 
 const isValidAddress = (a) => /^0x[a-fA-F0-9]{40}$/.test(String(a || ""));
 
@@ -155,6 +155,36 @@ export async function getUserPendingClaimedAmount(user) {
   return String(raw || "0");
 }
 
+export async function getUserTotalWithdtawAmount(user) {
+  const isAddr = /^0x[a-fA-F0-9]{40}$/.test(String(user || ""));
+  if (!isAddr) return "0";
+
+  await ensureChain("bscTestnet");
+  const c = getContract();
+
+  const v = await c.methods.userTotalWithdrawAmount(user).call();
+  console.log("check withdraw",v)
+  // some providers return a plain string, some return [value]
+  const raw = Array.isArray(v) ? v[0] : v;
+  return String(raw || "0");
+}
+
+
+export async function getUserWithdrawableAmount(user) {
+  const isAddr = /^0x[a-fA-F0-9]{40}$/.test(String(user || ""));
+  if (!isAddr) return "0";
+
+  await ensureChain("bscTestnet");
+  const c = getContract();
+
+  console.log("user addeess:", user)
+
+  const v = await c.methods.getUpdateWithdrawReward(user).call();
+  console.log("check withraw rmianing",v)
+  // some providers return a plain string, some return [value]
+  const raw = Array.isArray(v) ? v[0] : v;
+  return String(raw || "0");
+}
 
 
 

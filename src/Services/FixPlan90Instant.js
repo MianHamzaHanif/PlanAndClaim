@@ -5,8 +5,8 @@ import { getUSDTContract, fetchUSDTMeta } from "./USDTInstant";
 import planabi from "../abi/planabi.json";
 
 // ✅ Sirf BSC Testnet ka address rakho
-export const PLAN_CONTRACT_ADDRESS = "0x97af7D3e3914A91c5781d0CE5B79D5b06d414C22";
-export const FIX_PLAN90_ADDRESS = "0x8619fF9F5698324b765613f0706fef63A679C381";
+export const PLAN_CONTRACT_ADDRESS = "0x0119a4827f2Ceb1f16c86B34C2A8B736653e13a3";
+export const FIX_PLAN90_ADDRESS = "0xf6a74b001b3667d7841b920f4C2a12A0D30e5954";
 
 // ---- Unstake helpers ----
 export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";

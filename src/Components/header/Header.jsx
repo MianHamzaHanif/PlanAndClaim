@@ -8,6 +8,7 @@ import {
   removeProviderEvents,
   tryRevokePermissions,
   getExistingConnection,
+  ensureChain
 } from "../../Services/contract";
 
 const Header = () => {
@@ -30,30 +31,64 @@ const Header = () => {
     }
   }, []);
 
+  const broadcastWallet = (acc, cid) => {
+    const detail = { account: acc || null, chainId: cid || null, ts: Date.now() };
+    window.__WALLET = detail; // optional snapshot if any screen wants to read directly
+    window.dispatchEvent(new CustomEvent("wallet:changed", { detail }));
+  };
+
   // Silent restore (wallet already connected)
+
   useEffect(() => {
     (async () => {
       const { account: acc, chainId: cid } = await getExistingConnection();
       if (acc) {
         setAccount(acc);
         setChainId(cid);
+        try { await ensureChain("bscTestnet"); } catch { }
+        broadcastWallet(acc, cid);
       }
     })();
   }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     const { account: acc, chainId: cid } = await getExistingConnection();
+  //     if (acc) {
+  //       setAccount(acc);
+  //       setChainId(cid);
+  //     }
+  //   })();
+  // }, []);
 
   // Provider events
   useEffect(() => {
     attachProviderEvents({
-      onAccountsChanged: (accs) => {
+      onAccountsChanged: async (accs) => {
         const next = accs?.[0] || null;
-        setAccount(next);
+
+        if (next !== account) {
+          setAccount(next);
+          if (!next) setChainId(null);
+          try { await ensureChain("bscTestnet"); } catch { }
+          broadcastWallet(next, next ? chainId : null);
+        }
         if (next && bootstrapModal) bootstrapModal.show();
-        if (!next) setChainId(null);
+        // setAccount(next);
+        // if (!next) setChainId(null);
+        // await ensureAndBroadcast(next, chainId);
+        // if (next && bootstrapModal) bootstrapModal.show();
+        // if (next && bootstrapModal) bootstrapModal.show();
+        // if (!next) setChainId(null);
       },
-      onChainChanged: (cid) => setChainId(cid),
+      // onChainChanged: (cid) => setChainId(cid),
+      onChainChanged: async (cid) => {
+        setChainId(cid);
+        broadcastWallet(account, cid);
+      },
       onDisconnect: () => {
         setAccount(null);
         setChainId(null);
+        broadcastWallet(null, null);
       },
     });
     return () => removeProviderEvents();
@@ -70,6 +105,8 @@ const Header = () => {
       const { account: acc, chainId: cid } = await connectWallet({ chainKey: "bscTestnet" });
       setAccount(acc);
       setChainId(cid);
+      try { await ensureChain("bscTestnet"); } catch { }
+      broadcastWallet(acc, cid);
       if (bootstrapModal) bootstrapModal.show();
     } catch (e) {
       alert(e?.message || "Failed to connect wallet.");
@@ -80,8 +117,37 @@ const Header = () => {
     setAccount(null);
     setChainId(null);
     await tryRevokePermissions();
+    broadcastWallet(null, null);
     if (bootstrapModal) bootstrapModal.hide();
   }, [bootstrapModal]);
+
+
+  // ---- heartbeat & focus re-check (fixes stale provider without manual reconnect)
+  useEffect(() => {
+    const check = async () => {
+      if (!window?.ethereum) return;
+      try {
+        const [cid, accs] = await Promise.all([
+          window.ethereum.request({ method: "eth_chainId" }).catch(() => null),
+          window.ethereum.request({ method: "eth_accounts" }).catch(() => []),
+        ]);
+        const acc = accs?.[0] || null;
+        const changed = (acc !== account) || (!!cid && cid !== chainId);
+        if (changed) {
+          setAccount(acc);
+          setChainId(cid);
+          await ensureAndBroadcast(acc, cid);
+        } else {
+          window.dispatchEvent(new CustomEvent("wallet:heartbeat", { detail: { account: acc, chainId: cid, ts: Date.now() } }));
+        }
+      } catch { }
+    };
+    const id = setInterval(check, 25000);
+    const onVisible = () => { if (document.visibilityState === "visible") check(); };
+    document.addEventListener("visibilitychange", onVisible);
+    check();
+    return () => { clearInterval(id); document.removeEventListener("visibilitychange", onVisible); };
+  }, [account, chainId]);
 
   return (
     <>
@@ -134,6 +200,7 @@ const Header = () => {
                 <li className="nav-item dropdown">
                   <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Bonds</a>
                   <ul className="dropdown-menu">
+                    <li><Link className="dropdown-item" to="/staking-claim">Staking Claim Reward</Link></li>
                     <li><Link className="dropdown-item" to="/direct-reward">Direct Reward</Link></li>
                     <li><Link className="dropdown-item" to="/service-reward">Service Reward</Link></li>
                     <li><Link className="dropdown-item" to="/rebate-reward">Rebate Reward</Link></li>

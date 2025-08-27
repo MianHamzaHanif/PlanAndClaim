@@ -5,8 +5,8 @@ import { getUSDTContract, fetchUSDTMeta } from "./USDTInstant";
 import planabi from "../abi/planabi.json";
 
 // ✅ Sirf BSC Testnet ka address rakho
-export const PLAN_CONTRACT_ADDRESS = "0x97af7D3e3914A91c5781d0CE5B79D5b06d414C22";
-export const FLEXIBLE_PLAN_ADDRESS = "0x64D632cc3a438d4f5967df560b5c5eE85c2221aa";
+export const PLAN_CONTRACT_ADDRESS = "0x0119a4827f2Ceb1f16c86B34C2A8B736653e13a3";
+export const FLEXIBLE_PLAN_ADDRESS = "0x73F6796aCFe4eE62F44D000dBed5e71025Bb3CD4";
 
 // ---- Unstake helpers ----
 export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
@@ -478,5 +478,5 @@ export async function claimTitlePlan({ chainKey = "bscTestnet" } = {}) {
 
     const c = getPlanContract();
     // If contract expects uint8/uint256 it's fine; string/number both ok in web3
-    return await c.methods.claimTitleRewardP(t).send({ from });
+    return await c.methods.claimTitleRewardP().send({ from });
 }

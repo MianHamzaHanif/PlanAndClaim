@@ -26,6 +26,7 @@ import DirectReward from "./Components/Bonds/DirectReward";
 import ServiceReward from "./Components/Bonds/ServiceReward";
 import RebateReward from "./Components/Bonds/RebateReward";
 import TitleReward from "./Components/Bonds/TitleReward";
+import StakingClaim from "./Components/Bonds/StakingClaim";
 
 function App() {
   return (
@@ -42,7 +43,7 @@ function App() {
         <Route path="/longterm180" element={<LongTerm180 />} />
         <Route path="/longterm360" element={<LongTerm360 />} />
         <Route path="/longterm480" element={<LongTerm480 />} />
-        <Route path="/liquidity" element={<LiquidityBonds />} /> 
+        <Route path="/liquidity" element={<LiquidityBonds />} />
         <Route path="/comeson" element={<Comeson />} />
         <Route path="/resonance" element={<Resonance />} />
         <Route path="/Title" element={<LevelPool />} />
@@ -51,16 +52,12 @@ function App() {
         <Route path="/reciprocal" element={<ReciprocalPool />} />
         <Route path="/incentive" element={<Incentive />} />
         <Route path="/turbine" element={<Turbine />} />
-      	<Route path="/swap" element={<Swap />} />
-      	<Route path="/direct-reward" element={<DirectReward />} />
-      	<Route path="/service-reward" element={<ServiceReward />} />
-      	<Route path="/rebate-reward" element={<RebateReward />} />
-      	<Route path="/title-reward" element={<TitleReward />} />
-
-
-
-
-
+        <Route path="/swap" element={<Swap />} />
+        <Route path="/direct-reward" element={<DirectReward />} />
+        <Route path="/service-reward" element={<ServiceReward />} />
+        <Route path="/rebate-reward" element={<RebateReward />} />
+        <Route path="/title-reward" element={<TitleReward />} />
+        <Route path="/staking-claim" element={<StakingClaim />} />
         <Route path="/invite" element={<Invite />} />
       </Routes>
     </>

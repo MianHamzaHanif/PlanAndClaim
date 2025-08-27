@@ -1,15 +1,13 @@
 
-
 import React, { useEffect, useState } from "react";
+
 import Header from "../header/Header";
 import Footer from "../footer/Footer";
-import { getUserClaimDetails, getUserClaimsLength, getUserDirectDetails, getUserDirectLength, getUserPendingClaimedAmount, getUserWithdrawDetails, getUserWithdrawLength, withdrawByDays } from "../../Services/turbine";
+import { getUserClaimDetails, getUserClaimsLength, getUserPendingClaimedAmount, getUserWithdrawableAmount, getUserWithdrawDetails, getUserWithdrawLength, withdrawByDays } from "../../Services/turbine";
 import { connectWallet, getExistingConnection, ensureChain } from "../../Services/contract";
 import { formatUnits } from "../../Services/USDTInstant";
-import { claimTitlePlan, getUserTitleDetails } from "../../Services/planInstant";
-import "../Staking/Flexible.css"
 
-const TitleReward = () => {
+const StakingClaim = () => {
     // web3/account
     const [account, setAccount] = useState(null);
     const [chainId, setChainId] = useState(null);
@@ -17,6 +15,8 @@ const TitleReward = () => {
     const [refreshing, setRefreshing] = useState(false);
 
     const [pendingRaw, setPendingRaw] = useState("0");
+    const [pendingWithdraw, setPendingWithdraw] = useState("0");
+
 
 
     // NEW: withdraw state
@@ -26,9 +26,8 @@ const TitleReward = () => {
     // token display
     const [tokenSymbol] = useState("AS");
     const [tokenDecimals] = useState(18);
-    const [claiming, setClaiming] = useState(false);
+
     const [withdraw, withdrawDetails] = useState([]);
-    console.log("withdrawwithdrawwithdraw", withdraw)
 
     // claim table state
     const [claims, setClaims] = useState([]);
@@ -41,6 +40,18 @@ const TitleReward = () => {
         const id = setInterval(() => setNowTs(Math.floor(Date.now() / 1000)), 1000);
         return () => clearInterval(id);
     }, []);
+
+
+    // put this near your other helpers
+    const refreshAll = async (addr = account) => {
+        await Promise.all([
+            refreshHeaderStats(addr),        // Claimable Amount
+            refreshWithdrawableStats(addr),  // Withdrawable Amount
+            refreshClaimHistory(addr),       // Claim list
+            withdrawHistory(addr),           // Withdraw history
+        ]);
+    };
+
 
     // restore wallet on mount
     useEffect(() => {
@@ -66,15 +77,27 @@ const TitleReward = () => {
         }
     };
 
+    const refreshWithdrawableStats = async (addr = account) => {
+        if (!addr) { setPendingWithdraw("0"); return; }
+        try {
+            await ensureChain("bscTestnet");
+            const v = await getUserWithdrawableAmount(addr);
+            console.log("vvvvv check", v)
+            let formatRaw = formatUnits(v, tokenDecimals, 4)
+            setPendingWithdraw(String(formatRaw || "0"));
+        } catch (e) {
+            console.warn("pending amount fetch error:", e);
+            setPendingWithdraw("0");
+        }
+    };
+
     useEffect(() => {
-        refreshHeaderStats();
-        refreshClaimHistory();
+        refreshAll();
+        // refreshHeaderStats();
+        // refreshClaimHistory();
+        // refreshWithdrawableStats();
         // eslint-disable-next-line
     }, [account, tokenDecimals]);
-
-
-
-
 
 
 
@@ -167,14 +190,32 @@ const TitleReward = () => {
             setRefreshing(true);
             await ensureChain("bscTestnet");
 
-            const d = await getUserTitleDetails(addr);
-            // console.log("coiunt", count)
-            withdrawDetails(d.raw)
-            // return {
-            //     // index: i,
-            //     amountRaw: String(d.amount ?? "0"),
-            //     raw
-            // };
+            const count = await getUserWithdrawLength(addr);
+            console.log("coiunt", count)
+            if (!Number.isFinite(count) || count <= 0) {
+                setClaims([]);
+                setClaimPage(1);
+                return;
+            }
+
+            const idxs = Array.from({ length: count }, (_, i) => i);
+            const rows = await Promise.all(
+                idxs.map(async (i) => {
+                    const d = await getUserWithdrawDetails(addr, i);
+                    const amountFmt = formatUnits(String(d.amount ?? "0"), tokenDecimals, 4);
+                    return {
+                        index: i,
+                        amountRaw: String(d.amount ?? "0"),
+                        amountFmt,
+                        time: Number(d.time || 0),
+                        status: Boolean(d.status),
+                    };
+                })
+            );
+
+            rows.sort((a, b) => b.time - a.time);
+            withdrawDetails(rows);
+            setClaimPage(1);
         } catch (e) {
             console.error("refreshClaimHistory error:", e);
             setClaims([]);
@@ -201,7 +242,9 @@ const TitleReward = () => {
         try {
             setWithdrawing(true);
             await withdrawByDays(selectedDay, account);  // opens MetaMask
-            await refreshClaimHistory(account);
+            // await refreshClaimHistory(account);
+            await refreshAll(account); 
+            setSelectedDay(null);
             // optional toast: success
         } catch (e) {
             console.error(e);
@@ -214,66 +257,16 @@ const TitleReward = () => {
     const DAY_OPTIONS = [5, 10, 15, 20];
 
     // Withdraw pagination
-    // const [withdrawPage, setWithdrawPage] = useState(1);
-    // const WITHDRAW_PAGE_SIZE = 10;
+    const [withdrawPage, setWithdrawPage] = useState(1);
+    const WITHDRAW_PAGE_SIZE = 10;
 
-    // // Slices for withdraw table
-    // const withdrawTotal = withdraw.length;
-    // const withdrawTotalPages = Math.max(1, Math.ceil(withdrawTotal / WITHDRAW_PAGE_SIZE));
-    // const withdrawStart = (withdrawPage - 1) * WITHDRAW_PAGE_SIZE;
-    // const withdrawRows = withdraw.slice(withdrawStart, withdrawStart + WITHDRAW_PAGE_SIZE);
-    // const withdrawFirst = Math.min(withdrawTotal, withdrawStart + 1);
-    // const withdrawLast = Math.min(withdrawTotal, withdrawStart + WITHDRAW_PAGE_SIZE);
-
-    const toBig = (x) => {
-        try { return BigInt(String(x ?? "0")); } catch { return 0n; }
-    };
-
-    // Use the contract-returned `withdraw` tuple to decide if there’s anything claimable.
-    // Adjust the indexes if your contract returns a different shape.
-    const hasClaimable = toBig(withdraw?.[0]) > 0n || toBig(withdraw?.[2]) > 0n;
-
-    const handleClaim = async () => {
-        if (!account) return alert("Connect wallet first.");
-        try {
-            await ensureChain("bscTestnet");
-
-            // nothing available?
-            if (!hasClaimable) {
-                return alert("Nothing to claim right now.");
-            }
-
-            setClaiming(true);
-
-            // your pre-built function (do not change its signature)
-            const tx = await claimTitlePlan();
-
-            // optional: toast/console
-            console.log("Claim TX:", tx);
-
-            // refresh any UI that shows balances/rows
-            await Promise.all([
-                refreshHeaderStats(account),
-                withdrawHistory(account),
-                refreshClaimHistory(account),
-            ]);
-        } catch (err) {
-            console.error(err);
-            alert(err?.message || "Claim failed.");
-        } finally {
-            setClaiming(false);
-        }
-    };
-
-
-    // put this helper inside your component (top-level)
-    const fmtToken = (v) => {
-        try {
-            return formatUnits(String(v ?? "0"), tokenDecimals, 4);
-        } catch {
-            return String(v ?? "0");
-        }
-    };
+    // Slices for withdraw table
+    const withdrawTotal = withdraw.length;
+    const withdrawTotalPages = Math.max(1, Math.ceil(withdrawTotal / WITHDRAW_PAGE_SIZE));
+    const withdrawStart = (withdrawPage - 1) * WITHDRAW_PAGE_SIZE;
+    const withdrawRows = withdraw.slice(withdrawStart, withdrawStart + WITHDRAW_PAGE_SIZE);
+    const withdrawFirst = Math.min(withdrawTotal, withdrawStart + 1);
+    const withdrawLast = Math.min(withdrawTotal, withdrawStart + WITHDRAW_PAGE_SIZE);
 
 
     return (
@@ -282,58 +275,67 @@ const TitleReward = () => {
             <div className="DAOPage ResonancePage Turbine">
                 <div className="container px-md-3">
                     <div className="row g-4">
+                      
 
-                        {/* Records placeholder */}
-                        <div className="col-md-12 card w-100">
-                            <div className="Heading Heading2in mb-4">Title Reward History</div>
-                            <ul className="list-flex text-white px-0 clr">
-                                 <li className="justify-content-between d-flex">
-                                    <h6 className="text-white">User Title</h6>
-                                    <p>P{fmtToken(withdraw?.[7])}</p>
-                                </li>
-                                <li className="justify-content-between d-flex">
-                                    <h6 className="text-white">Current One Time Title Reward</h6>
-                                    <p className="d-flex align-items-center gap-2">
-                                        {fmtToken(withdraw?.[0])} {tokenSymbol}
-                                    </p>
-                                </li>
+                        {/* Claim List (3 columns) */}
+                        <div className="col-md-12">
+                            <div className="Heading Heading2in mb-4 h4">Claim List</div>
 
-                                <li className="justify-content-between d-flex">
-                                    <h6 className="text-white">Total One Time Title Reward</h6>
-                                    <p className="d-flex align-items-center gap-2">
-                                        {fmtToken(withdraw?.[1])} {tokenSymbol}
-                                    </p>
-                                </li>
+                            <div className="table-responsive">
+                                <table className="table table-hover align-middle">
+                                    <thead className="table-dark">
+                                        <tr>
+                                            <th>Amount ({tokenSymbol})</th>
+                                            <th>Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {claimRows.length === 0 ? (
+                                            <tr>
+                                                <td colSpan={3} className="text-center py-4">
+                                                    {refreshing ? "Loading…" : account ? "No Data" : "Connect wallet to see history."}
+                                                </td>
+                                            </tr>
+                                        ) : (
+                                            claimRows.map((r) => {
+                                                const secsLeft = Math.max(0, (r.time || 0) - nowTs);
+                                                const unlocked = secsLeft === 0 || r.status === true;
+                                                return (
+                                                    <tr key={`claim-${r.index}`}>
+                                                        <td className="fw-semibold">{r.amountFmt}</td>
+                                                        <td>
+                                                            <div className="fw-semibold">
+                                                                {r.time ? new Date(r.time * 1000).toLocaleString() : "-"}
+                                                            </div>
+                                                            <div className="text-muted" style={{ fontSize: 12 }}>
+                                                                {r.time ? (unlocked ? "Unlocked" : `in ${fmtCountdown(secsLeft)}`) : ""}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
 
-                                <li className="justify-content-between d-flex">
-                                    <h6 className="text-white">Current Title Reward</h6>
-                                    <p>{fmtToken(withdraw?.[2])} {tokenSymbol}</p>
-                                </li>
+                            {/* Pagination */}
+                            <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-2">
+                                <div className="text-muted small">
+                                    {claimTotal > 0 ? `Showing ${claimFirst}–${claimLast} of ${claimTotal}` : "No rows"}
+                                </div>
 
-                                <li className="justify-content-between d-flex">
-                                    <h6 className="text-white">Total Title Reward (0–10)</h6>
-                                    <p>{fmtToken(withdraw?.[3])} {tokenSymbol}</p>
-                                </li>
-
-                                <li className="justify-content-between d-flex">
-                                    <h6 className="text-white">Total Claimed Title Reward (0–10)</h6>
-                                    <p>{fmtToken(withdraw?.[6])} {tokenSymbol}</p>
-                                </li>
-
-                                <li className="mx-auto d-flex">
-                                    <button
-                                        className="zv-cta zv-cta--sm"
-                                        onClick={handleClaim}
-                                        disabled={!account || claiming || !hasClaimable}
-                                        title={!account ? "Connect wallet" : (!hasClaimable ? "Nothing to claim" : "Claim")}
-                                    >
-                                        {claiming ? "Claiming…" : "Claim"}
-                                    </button>
-
-                                </li>
-                            </ul>
-
+                                <div className="d-flex align-items-center gap-2">
+                                    <button className="btn btn-sm btn-secondary" onClick={() => setClaimPage(1)} disabled={claimPage <= 1} title="First page">« First</button>
+                                    <button className="btn btn-sm btn-secondary" onClick={() => setClaimPage((p) => Math.max(1, p - 1))} disabled={claimPage <= 1} title="Previous page">‹ Prev</button>
+                                    <span className="px-2 referral-input">Page {claimPage} / {claimTotalPages}</span>
+                                    <button className="btn btn-sm btn-secondary" onClick={() => setClaimPage((p) => Math.min(claimTotalPages, p + 1))} disabled={claimPage >= claimTotalPages} title="Next page">Next ›</button>
+                                    <button className="btn btn-sm btn-secondary" onClick={() => setClaimPage(claimTotalPages)} disabled={claimPage >= claimTotalPages} title="Last page">Last »</button>
+                                </div>
+                            </div>
                         </div>
+
+                     
 
                     </div>
                 </div>
@@ -363,4 +365,4 @@ const TitleReward = () => {
     );
 };
 
-export default TitleReward;
+export default StakingClaim;

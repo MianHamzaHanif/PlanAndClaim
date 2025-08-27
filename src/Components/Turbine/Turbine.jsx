@@ -287,7 +287,7 @@ import React, { useEffect, useState } from "react";
 import "./Turbine.css";
 import Header from "../header/Header";
 import Footer from "../footer/Footer";
-import { getUserClaimDetails, getUserClaimsLength, getUserPendingClaimedAmount, getUserWithdrawDetails, getUserWithdrawLength, withdrawByDays } from "../../Services/turbine";
+import { getUserClaimDetails, getUserClaimsLength, getUserPendingClaimedAmount, getUserTotalWithdtawAmount, getUserWithdrawableAmount, getUserWithdrawDetails, getUserWithdrawLength, withdrawByDays } from "../../Services/turbine";
 import { connectWallet, getExistingConnection, ensureChain } from "../../Services/contract";
 import { formatUnits } from "../../Services/USDTInstant";
 
@@ -299,6 +299,10 @@ const Turbine = () => {
     const [refreshing, setRefreshing] = useState(false);
 
     const [pendingRaw, setPendingRaw] = useState("0");
+    const [pendingWithdraw, setPendingWithdraw] = useState("0");
+    const [totalWithdraw, setTotalWithdraw] = useState("0");
+
+
 
 
     // NEW: withdraw state
@@ -322,6 +326,19 @@ const Turbine = () => {
         const id = setInterval(() => setNowTs(Math.floor(Date.now() / 1000)), 1000);
         return () => clearInterval(id);
     }, []);
+
+
+    // put this near your other helpers
+    const refreshAll = async (addr = account) => {
+        await Promise.all([
+            refreshHeaderStats(addr),        // Claimable Amount
+            refreshWithdrawableStats(addr),  // Withdrawable Amount
+            refreshClaimHistory(addr),       // Claim list
+            withdrawHistory(addr),           // Withdraw history
+            refreshWithdrawStats(addr)
+        ]);
+    };
+
 
     // restore wallet on mount
     useEffect(() => {
@@ -347,9 +364,40 @@ const Turbine = () => {
         }
     };
 
+
+    const refreshWithdrawStats = async (addr = account) => {
+        if (!addr) { setTotalWithdraw("0"); return; }
+        try {
+            await ensureChain("bscTestnet");
+            const v = await getUserTotalWithdtawAmount(addr);
+            console.log("vvvv of withdraw", v)
+            let formatRaw = formatUnits(v, tokenDecimals, 4)
+            setTotalWithdraw(String(formatRaw || "0"));
+        } catch (e) {
+            console.warn("pending amount fetch error:", e);
+            setTotalWithdraw("0");
+        }
+    };
+
+    const refreshWithdrawableStats = async (addr = account) => {
+        // if (!addr) { setPendingWithdraw("0"); return; }
+        try {
+            await ensureChain("bscTestnet");
+            const v = await getUserWithdrawableAmount(addr);
+            console.log("vvvvv check", v)
+            let formatRaw = formatUnits(v, tokenDecimals, 4)
+            setPendingWithdraw(String(formatRaw || "0"));
+        } catch (e) {
+            console.warn("pending amount fetch error:", e);
+            setPendingWithdraw("0");
+        }
+    };
+
     useEffect(() => {
-        refreshHeaderStats();
-        refreshClaimHistory();
+        refreshAll();
+        // refreshHeaderStats();
+        // refreshClaimHistory();
+        // refreshWithdrawableStats();
         // eslint-disable-next-line
     }, [account, tokenDecimals]);
 
@@ -496,7 +544,9 @@ const Turbine = () => {
         try {
             setWithdrawing(true);
             await withdrawByDays(selectedDay, account);  // opens MetaMask
-            await refreshClaimHistory(account);
+            // await refreshClaimHistory(account);
+            await refreshAll(account);
+            setSelectedDay(null);
             // optional toast: success
         } catch (e) {
             console.error(e);
@@ -534,12 +584,19 @@ const Turbine = () => {
                         <div className="col-md-12 mx-auto">
                             <div className="card w-100 Turbinecard">
                                 <div className="card-body">
+                                    <div className="d-flex align-items-center text-center w-100 justify-content-center flex-wrap">
+                                        <div className="lefticonheading text-center">
+                                            <span data-bs-toggle="modal" data-bs-target="#exampleModal"></span>Total Withdraw Amount: <span>{totalWithdraw} {tokenSymbol}</span>
+                                        </div>
+                                    </div>
                                     <div className="d-flex align-items-center justify-content-between flex-wrap">
                                         <div className="lefticonheading">
-                                            <span data-bs-toggle="modal" data-bs-target="#exampleModal"></span>Claimable Amount: {pendingRaw} {tokenSymbol}
+                                            <span data-bs-toggle="modal" data-bs-target="#exampleModal"></span>Staking Claimable Amount:<span> {pendingRaw} {tokenSymbol} </span>
                                         </div>
-                                        {/* <div className="righttext">Unlockable Amount: <span>0.0000</span>{tokenSymbol}</div> */}
+                                        <div className="lefticonheading">Withdrawable Amount: <span>{pendingWithdraw} {tokenSymbol}</span></div>
                                     </div>
+
+
 
                                     {/* NEW: day selector */}
                                     <div className="mt-3 d-flex gap-2 flex-wrap">
@@ -579,62 +636,7 @@ const Turbine = () => {
                         </div>
 
                         {/* Claim List (3 columns) */}
-                        <div className="col-md-12">
-                            <div className="Heading Heading2in mb-4 h4">Claim List</div>
 
-                            <div className="table-responsive">
-                                <table className="table table-hover align-middle">
-                                    <thead className="table-dark">
-                                        <tr>
-                                            <th>Amount ({tokenSymbol})</th>
-                                            <th>Time</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {claimRows.length === 0 ? (
-                                            <tr>
-                                                <td colSpan={3} className="text-center py-4">
-                                                    {refreshing ? "Loading…" : account ? "No Data" : "Connect wallet to see history."}
-                                                </td>
-                                            </tr>
-                                        ) : (
-                                            claimRows.map((r) => {
-                                                const secsLeft = Math.max(0, (r.time || 0) - nowTs);
-                                                const unlocked = secsLeft === 0 || r.status === true;
-                                                return (
-                                                    <tr key={`claim-${r.index}`}>
-                                                        <td className="fw-semibold">{r.amountFmt}</td>
-                                                        <td>
-                                                            <div className="fw-semibold">
-                                                                {r.time ? new Date(r.time * 1000).toLocaleString() : "-"}
-                                                            </div>
-                                                            <div className="text-muted" style={{ fontSize: 12 }}>
-                                                                {r.time ? (unlocked ? "Unlocked" : `in ${fmtCountdown(secsLeft)}`) : ""}
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            })
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            {/* Pagination */}
-                            <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-2">
-                                <div className="text-muted small">
-                                    {claimTotal > 0 ? `Showing ${claimFirst}–${claimLast} of ${claimTotal}` : "No rows"}
-                                </div>
-
-                                <div className="d-flex align-items-center gap-2">
-                                    <button className="btn btn-sm btn-secondary" onClick={() => setClaimPage(1)} disabled={claimPage <= 1} title="First page">« First</button>
-                                    <button className="btn btn-sm btn-secondary" onClick={() => setClaimPage((p) => Math.max(1, p - 1))} disabled={claimPage <= 1} title="Previous page">‹ Prev</button>
-                                    <span className="px-2 referral-input">Page {claimPage} / {claimTotalPages}</span>
-                                    <button className="btn btn-sm btn-secondary" onClick={() => setClaimPage((p) => Math.min(claimTotalPages, p + 1))} disabled={claimPage >= claimTotalPages} title="Next page">Next ›</button>
-                                    <button className="btn btn-sm btn-secondary" onClick={() => setClaimPage(claimTotalPages)} disabled={claimPage >= claimTotalPages} title="Last page">Last »</button>
-                                </div>
-                            </div>
-                        </div>
 
                         {/* Records placeholder */}
                         <div className="col-md-12">
